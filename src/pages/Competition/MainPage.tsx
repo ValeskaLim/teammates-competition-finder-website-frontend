@@ -26,10 +26,24 @@ const MainPage = () => {
   const { users } = useAuth();
   const location = useLocation();
   const { pathname } = location;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const itemsPerPage = 6;
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentCompetitions = competitions.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+  const totalPages = Math.ceil(competitions.length / itemsPerPage);
 
   const { errorToast, successToast } = useToast();
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [competitions]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -173,7 +187,7 @@ const MainPage = () => {
             <p>No competitions available.</p>
           ) : (
             <ul className="space-y-2 grid grid-cols-3 gap-2">
-              {competitions.map((comp: any, idx) => (
+              {currentCompetitions.map((comp: any, idx) => (
                 <>
                   <div>
                     <li
@@ -281,6 +295,37 @@ const MainPage = () => {
               ))}
             </ul>
           )}
+        </div>
+        <div className="flex justify-end gap-2 mt-6">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="px-3 py-1 border rounded disabled:opacity-50"
+          >
+            {"<<"}
+          </button>
+
+          {[...Array(totalPages)].map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentPage(idx + 1)}
+              className={`px-3 py-1 border rounded ${
+                currentPage === idx + 1 ? "bg-blue-500 text-white" : ""
+              }`}
+            >
+              {idx + 1}
+            </button>
+          ))}
+
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 border rounded disabled:opacity-50"
+          >
+            {">>"}
+          </button>
         </div>
       </div>
     </div>

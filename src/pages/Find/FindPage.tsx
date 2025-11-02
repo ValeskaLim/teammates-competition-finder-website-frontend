@@ -31,6 +31,11 @@ const FindPage = () => {
 
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const itemsPerPage = 6;
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
   const { successToast, errorToast } = useToast();
 
@@ -45,6 +50,13 @@ const FindPage = () => {
   const displayedUsers = (usersToShow || []).filter((user: any) =>
     user.username?.toLowerCase().includes(username.toLowerCase())
   );
+
+  const currentUsers = displayedUsers.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(displayedUsers.length / itemsPerPage);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [username, selectedSkills, displayedUsers.length]);
 
   useEffect(() => {
     const fetchinviteesUser = async () => {
@@ -128,9 +140,11 @@ const FindPage = () => {
           id: id,
         });
         setMaxMember(response.data.data.max_member);
+        setIsJoinCompetition(true);
       } catch (error: any) {
         console.log(error);
         const errorMessage = error.response.data.message;
+        setIsJoinCompetition(false);
         errorToast(errorMessage);
       }
     };
@@ -330,7 +344,10 @@ const FindPage = () => {
               placeholder="Search users by username"
               className="p-3 w-full bg-slate-50 border border-gray-300 h-full rounded-l-lg"
               disabled={
-                memberLength === maxMember || !isJoinCompetition || !isLeader || isFinalized
+                memberLength === maxMember ||
+                !isJoinCompetition ||
+                !isLeader ||
+                isFinalized
               }
             />
             <button
@@ -338,7 +355,10 @@ const FindPage = () => {
               className="h-full cursor-pointer flex gap-2 group text-lg items-center w-fit text-white bg-blue-500 py-2 px-4 rounded-r-lg duration-300 font-semibold 
                         hover:bg-blue-600 hover:duration-300 disabled:cursor-not-allowed disabled:bg-blue-300"
               disabled={
-                memberLength === maxMember || !isJoinCompetition || !isLeader || isFinalized
+                memberLength === maxMember ||
+                !isJoinCompetition ||
+                !isLeader ||
+                isFinalized
               }
               onClick={async () => {
                 await fetchAllUsers();
@@ -355,7 +375,10 @@ const FindPage = () => {
               onClick={toggleFilterDropdown}
               className="h-full bg-white shadow-lg cursor-pointer flex group text-lg items-center w-fit text-blue-500 py-2 px-4 rounded-md duration-300 font-semibold border-2 border-blue-500 hover:bg-white hover:font-bold disabled:cursor-not-allowed disabled:opacity-50"
               disabled={
-                memberLength === maxMember || !isJoinCompetition || !isLeader || isFinalized
+                memberLength === maxMember ||
+                !isJoinCompetition ||
+                !isLeader ||
+                isFinalized
               }
             >
               <CiFilter className="font-bold text-3xl" />
@@ -404,7 +427,7 @@ const FindPage = () => {
           <>
             <div>
               <ul className="grid grid-cols-3 gap-4">
-                {displayedUsers.map((user: any) => (
+                {currentUsers.map((user: any) => (
                   <li
                     key={user.user_id}
                     className="flex flex-col justify-between p-3 rounded-2xl bg-neutral-100 shadow-lg mt-10"
@@ -491,6 +514,41 @@ const FindPage = () => {
                   </li>
                 ))}
               </ul>
+              {totalPages > 1 && (
+                <div className="flex justify-end gap-2 mt-6">
+                  <button
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.max(prev - 1, 1))
+                    }
+                    disabled={currentPage === 1}
+                    className="px-3 py-1 border rounded disabled:opacity-50"
+                  >
+                    {'<<'}
+                  </button>
+
+                  {[...Array(totalPages)].map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCurrentPage(idx + 1)}
+                      className={`px-3 py-1 border rounded ${
+                        currentPage === idx + 1 ? "bg-blue-500 text-white" : ""
+                      }`}
+                    >
+                      {idx + 1}
+                    </button>
+                  ))}
+
+                  <button
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                    }
+                    disabled={currentPage === totalPages}
+                    className="px-3 py-1 border rounded disabled:opacity-50"
+                  >
+                    {'>>'}
+                  </button>
+                </div>
+              )}
             </div>
           </>
         ) : (

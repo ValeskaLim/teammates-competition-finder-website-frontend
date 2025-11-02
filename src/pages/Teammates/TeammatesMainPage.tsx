@@ -88,7 +88,7 @@ const TeammatesMainPage = () => {
             console.log(error);
             const errorMessage =
               error.response?.data?.message || "Failed to fetch competition";
-            errorToast(errorMessage);
+            // errorToast(errorMessage);
           }
 
           // Set the team name for editing
