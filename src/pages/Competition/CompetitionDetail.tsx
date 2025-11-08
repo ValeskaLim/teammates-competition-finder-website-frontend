@@ -5,12 +5,6 @@ import { useToast } from "../../hooks/useToast";
 import axios from "axios";
 import BlueButton from "../../components/BlueButton";
 
-const COMPETITION_CATEGORIES = [
-  { label: "Security", value: "SEC" },
-  { label: "Machine Learning", value: "ML" },
-  { label: "Mobile Development", value: "MD" },
-];
-
 const CompetitionDetail = () => {
   const location = useLocation();
   const competition = location.state?.competition;
@@ -23,6 +17,9 @@ const CompetitionDetail = () => {
   const [isAlreadyRequested, setIsAlreadyRequested] = useState([]);
   const [isFinalized, setIsFinalized] = useState("");
   const [isMaxMember, setIsMaxMember] = useState("");
+  const [categoryOptions, setCategoryOptions] = useState<
+    { label: string; value: string }[]
+  >([]);
 
   useEffect(() => {
     if (!competition) return;
@@ -36,7 +33,6 @@ const CompetitionDetail = () => {
           }
         );
         setParticipants(response.data.data);
-        
       } catch (error: any) {
         console.log(error);
         const errorMessage =
@@ -78,6 +74,27 @@ const CompetitionDetail = () => {
       }
     };
 
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.post(CommonConstant.GetAllCategories);
+        if (response.data.success) {
+          const categories = response.data.data || [];
+
+          const options = categories.map((item: any) => ({
+            label: item.category_name,
+            value: item.category_code,
+          }));
+
+          setCategoryOptions(options);
+        }
+      } catch (error: any) {
+        console.log(error);
+        const errorMessage = error.data.message;
+        errorToast(errorMessage);
+      }
+    };
+
+    fetchCategories();
     fetchListTeamUserRequest();
     fetchCheckAlreadyJoined();
     fetchParticipants();
@@ -138,6 +155,19 @@ const CompetitionDetail = () => {
     }
   };
 
+  const getFieldLabels = (valueString) => {
+    if (!valueString) return [];
+    const codes = valueString.split(",");
+    return codes
+      .map((code) => {
+        const match = categoryOptions.find(
+          (item) => item.value === code.trim()
+        );
+        return match ? match.label : code;
+      })
+      .filter(Boolean);
+  };
+
   return (
     <div className="main-container">
       <div className="main-col-container bg-white p-7 rounded-2xl shadow-md">
@@ -179,11 +209,9 @@ const CompetitionDetail = () => {
               <div className="flex flex-col gap-2 w-full">
                 <p className="font-semibold text-green-700 ">
                   Category:{" "}
-                  {
-                    COMPETITION_CATEGORIES.find(
-                      (c) => c.value === competition.category
-                    )?.label
-                  }
+                  {getFieldLabels(competition.category).map((label, idx) => (
+                    <span key={idx}>{label}</span>
+                  ))}
                 </p>
                 <p className="font-semibold text-green-700">
                   Status: {competition.status === "ACT" ? "Active" : "Inactive"}
@@ -229,7 +257,10 @@ const CompetitionDetail = () => {
               <p className="text-lg">No participants yet.</p>
             ) : (
               participants.map((participant) => (
-                <div key={participant.id} className="border border-[#BBB5B5] p-4 rounded-lg">
+                <div
+                  key={participant.id}
+                  className="border border-[#BBB5B5] p-4 rounded-lg"
+                >
                   <h3 className="font-semibold text-2xl">
                     {participant.team_name}
                   </h3>
@@ -246,16 +277,18 @@ const CompetitionDetail = () => {
                       {participant.notes || "-"}
                     </p>
                   </div>
-                  {!isJoined && !participant.is_finalized && !participant.is_full && (
-                    <BlueButton
-                      label="Request join"
-                      onClick={() => handleRequestJoin(participant.team_id)}
-                      extendedClassName="disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-500 mt-5"
-                      disabled={isAlreadyRequested.includes(
-                        participant.team_id
-                      )}
-                    />
-                  )}
+                  {!isJoined &&
+                    !participant.is_finalized &&
+                    !participant.is_full && (
+                      <BlueButton
+                        label="Request join"
+                        onClick={() => handleRequestJoin(participant.team_id)}
+                        extendedClassName="disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-500 mt-5"
+                        disabled={isAlreadyRequested.includes(
+                          participant.team_id
+                        )}
+                      />
+                    )}
                 </div>
               ))
             )}

@@ -246,7 +246,8 @@ const EditProfile = ({ users, setIsEdit }) => {
                 type="text"
                 value={major}
                 onChange={(e) => setMajor(e.target.value)}
-                className="text-md mt-3 p-2 border border-[#e6e6e6] rounded-lg w-full"
+                disabled
+                className="text-md mt-3 p-2 w-full"
               />
             </div>
             <div className="flex flex-col justify-between mt-4">
