@@ -1,6 +1,8 @@
 // URL
-const BASE = 'http://127.0.0.1:5002';
-const BASE_APPROVAL = 'http://127.0.0.1:5000';
+// const BASE = 'http://127.0.0.1:5002';
+const BASE = 'https://api.sunibhall.site';
+// const BASE_APPROVAL = 'http://127.0.0.1:5000';
+const BASE_APPROVAL = 'https://approval.sunibhall.site';
 const LOGIN = 'api/user/login';
 const SUBMIT_REGISTER = 'api/user/submit-register-data';
 const VERIFY_USER_EMAIL = 'api/user/verify-email';
