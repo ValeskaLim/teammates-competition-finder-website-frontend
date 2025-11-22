@@ -461,7 +461,7 @@ const TeammatesMainPage = () => {
                     </div>
                   </div>
                   <div className="card-container mt-10">
-                    <h3 className="text-2xl font-semibold mb-3">Notes</h3>
+                    <h3 className="text-2xl font-semibold mb-3">Notes for candidates</h3>
                     <div className="flex flex-col">
                       <textarea
                         name="notes"

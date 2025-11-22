@@ -209,6 +209,9 @@ const MainPage = () => {
                               dateStyle: "long",
                             })}
                           </p>
+                          <p className="pt-2 text-gray-600 text-md">
+                            {`Min member: ${comp.min_member} | Max member: ${comp.max_member}`}
+                          </p>
                           <p className="mt-3 break-all">
                             {comp.description.length > 170
                               ? `${comp.description.substring(0, 140)}...`

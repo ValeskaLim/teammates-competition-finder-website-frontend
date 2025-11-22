@@ -9,8 +9,21 @@ const FinalizedMainPage = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedText, setSelectedText] = useState<string | null>(null);
   const [isTextLoading, setIsTextLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentTransactions = transactions.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+  const totalPages = Math.ceil(transactions.length / itemsPerPage);
 
   const { successToast, errorToast } = useToast();
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [transactions]);
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -58,7 +71,7 @@ const FinalizedMainPage = () => {
             </p>
           ) : (
             <div className="grid grid-cols-3 gap-4 text-wrap">
-              {transactions.map((transaction: any) => (
+              {currentTransactions.map((transaction: any) => (
                 <div
                   key={transaction.proof_transaction_id}
                   className="border border-[#e6e6e6] rounded-2xl p-4 shadow-md mb-4 w-full bg-white"
@@ -109,6 +122,38 @@ const FinalizedMainPage = () => {
           )}
         </div>
       </div>
+
+      <div className="flex justify-end gap-2 mt-6">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="px-3 py-1 border rounded disabled:opacity-50"
+          >
+            {"<<"}
+          </button>
+
+          {[...Array(totalPages)].map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentPage(idx + 1)}
+              className={`px-3 py-1 border rounded ${
+                currentPage === idx + 1 ? "bg-blue-500 text-white" : ""
+              }`}
+            >
+              {idx + 1}
+            </button>
+          ))}
+
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 border rounded disabled:opacity-50"
+          >
+            {">>"}
+          </button>
+        </div>
 
       {selectedImage && (
         <div

@@ -259,7 +259,7 @@ const CompetitionDetail = () => {
               participants.map((participant) => (
                 <div
                   key={participant.id}
-                  className="border border-[#BBB5B5] p-4 rounded-lg"
+                  className="border border-[#BBB5B5] p-4 rounded-lg flex flex-col h-full"
                 >
                   <h3 className="font-semibold text-2xl">
                     {participant.team_name}
@@ -271,24 +271,28 @@ const CompetitionDetail = () => {
                       </ul>
                     ))}
                   </div>
-                  <p className="font-bold mt-10 text-lg">Notes for candidate</p>
-                  <div className="mt-3 bg-[#f0f0f0] p-3 rounded-xl">
-                    <p className="whitespace-pre-wrap font-semibold">
-                      {participant.notes || "-"}
+                  <div className="mt-auto">
+                    <p className="font-bold mt-10 text-lg">
+                      Notes for candidate
                     </p>
+                    <div className="mt-3 bg-[#f0f0f0] p-3 rounded-xl">
+                      <p className="whitespace-pre-wrap font-semibold">
+                        {participant.notes || "-"}
+                      </p>
+                    </div>
+                    {!isJoined &&
+                      !participant.is_finalized &&
+                      !participant.is_full && (
+                        <BlueButton
+                          label="Request join"
+                          onClick={() => handleRequestJoin(participant.team_id)}
+                          extendedClassName="disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-500 mt-5"
+                          disabled={isAlreadyRequested.includes(
+                            participant.team_id
+                          )}
+                        />
+                      )}
                   </div>
-                  {!isJoined &&
-                    !participant.is_finalized &&
-                    !participant.is_full && (
-                      <BlueButton
-                        label="Request join"
-                        onClick={() => handleRequestJoin(participant.team_id)}
-                        extendedClassName="disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-500 mt-5"
-                        disabled={isAlreadyRequested.includes(
-                          participant.team_id
-                        )}
-                      />
-                    )}
                 </div>
               ))
             )}
