@@ -3,10 +3,12 @@ import { ROUTE_PATHS } from "../../router/routePaths";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/AuthProvider";
 import { useToast } from "../../hooks/useToast";
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const { errorToast, successToast } = useToast();
 
   const { login } = useAuth();
@@ -43,14 +45,31 @@ function LoginPage() {
               className="lowercase p-2 w-full border border-[#BBB5B5] rounded-lg text-gray-900 placeholder:text-gray-400 focus:outline"
             ></input>
             <label className="text-lg">Password</label>
-            <input
-              type="password"
-              id="password"
-              placeholder="Your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="p-2 w-full border border-[#BBB5B5] rounded-lg text-gray-900 placeholder:text-gray-400 focus:outline"
-            ></input>
+            <div className="border flex border-[#BBB5B5] rounded-lg w-full">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                placeholder="Your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="p-2 w-full focus:outline-none text-gray-900 placeholder:text-gray-400"
+              ></input>
+              {showPassword ? (
+                <div
+                  className="flex flex-col justify-center mr-2"
+                  onClick={() => setShowPassword(false)}
+                >
+                  <IoMdEyeOff className="flex items-center text-xl" />
+                </div>
+              ) : (
+                <div
+                  className="flex flex-col justify-center mr-2"
+                  onClick={() => setShowPassword(true)}
+                >
+                  <IoMdEye className="flex items-center text-xl" />
+                </div>
+              )}
+            </div>
             <div className="flex justify-between">
               <a
                 href={ROUTE_PATHS.REGISTER}

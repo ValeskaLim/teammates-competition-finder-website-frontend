@@ -4,6 +4,7 @@ import { ROUTE_PATHS } from "../../router/routePaths";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../hooks/useToast";
 import CommonConstant from "../../constant/CommonConstant";
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import Select from "react-select";
 
 type OptionType = {
@@ -16,6 +17,7 @@ function RegisterPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [gender, setGender] = useState("");
   const [semester, setSemester] = useState("");
   const [fieldOfPreference, setFieldOfPreference] = useState<string[]>([]);
@@ -146,15 +148,26 @@ function RegisterPage() {
               required
             ></input>
             <label className="text-lg">Password</label>
-            <input
-              type="password"
-              id="password"
-              placeholder="Password length must be more than 3"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="p-2 w- border border-[#BBB5B5] rounded-lg text-gray-900 placeholder:text-gray-400 focus:outline"
-              required
-            ></input>
+            <div className="flex item-center w-full border border-[#BBB5B5] rounded-lg">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                placeholder="Password length must be more than 3"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="p-2 w-full focus:outline-hidden text-gray-900 placeholder:text-gray-400 focus:outline"
+                required
+              ></input>
+              {showPassword ? (
+                <div className="flex flex-col justify-center mr-2" onClick={() => setShowPassword(false)}>
+                  <IoMdEyeOff className="flex items-center text-xl" />
+                </div>
+              ) : (
+                <div className="flex flex-col justify-center mr-2" onClick={() => setShowPassword(true)}>
+                  <IoMdEye className="flex items-center text-xl" />
+                </div>
+              )}
+            </div>
             <label className="text-lg">Gender</label>
             <select
               name="gender"

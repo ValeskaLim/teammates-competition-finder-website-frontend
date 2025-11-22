@@ -335,94 +335,98 @@ const FindPage = () => {
   return (
     <div className="main-container">
       <div className="main-col-container">
-        <div className="mt-4 flex items-center h-[50px] w-full justify-center gap-3">
-          <div className="flex items-center h-full w-1/2">
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Search users by username"
-              className="p-3 w-full bg-slate-50 border border-gray-300 h-full rounded-l-lg"
-              disabled={
-                memberLength === maxMember ||
-                !isJoinCompetition ||
-                !isLeader ||
-                isFinalized
-              }
-            />
-            <button
-              type="button"
-              className="h-full cursor-pointer flex gap-2 group text-lg items-center w-fit text-white bg-blue-500 py-2 px-4 rounded-r-lg duration-300 font-semibold 
+        {!isJoinCompetition ? (
+          <div className="text-3xl font-semibold flex w-full justify-center text-red-500">Please join / create a team and join competition to access the find feature.</div>
+        ) : (
+          <div className="mt-4 flex items-center h-[50px] w-full justify-center gap-3">
+            <div className="flex items-center h-full w-1/2">
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Search users by username"
+                className="p-3 w-full bg-slate-50 border border-gray-300 h-full rounded-l-lg"
+                disabled={
+                  memberLength === maxMember ||
+                  !isJoinCompetition ||
+                  !isLeader ||
+                  isFinalized
+                }
+              />
+              <button
+                type="button"
+                className="h-full cursor-pointer flex gap-2 group text-lg items-center w-fit text-white bg-blue-500 py-2 px-4 rounded-r-lg duration-300 font-semibold 
                         hover:bg-blue-600 hover:duration-300 disabled:cursor-not-allowed disabled:bg-blue-300"
-              disabled={
-                memberLength === maxMember ||
-                !isJoinCompetition ||
-                !isLeader ||
-                isFinalized
-              }
-              onClick={async () => {
-                await fetchAllUsers();
-                setIsRunFind(true);
-              }}
-            >
-              <SlMagnifier className="font-bold" />
-            </button>
-          </div>
-          <div className="relative">
-            <button
-              ref={buttonRef}
-              type="button"
-              onClick={toggleFilterDropdown}
-              className="h-full bg-white shadow-lg cursor-pointer flex group text-lg items-center w-fit text-blue-500 py-2 px-4 rounded-md duration-300 font-semibold border-2 border-blue-500 hover:bg-white hover:font-bold disabled:cursor-not-allowed disabled:opacity-50"
-              disabled={
-                memberLength === maxMember ||
-                !isJoinCompetition ||
-                !isLeader ||
-                isFinalized
-              }
-            >
-              <CiFilter className="font-bold text-3xl" />
-            </button>
-
-            {showFilter && (
-              <div
-                ref={dropdownRef}
-                className="absolute top-full left-0 mt-2 p-3 bg-white shadow-md rounded-md w-70 z-50 max-h-60 overflow-y-auto flex flex-wrap gap-2"
+                disabled={
+                  memberLength === maxMember ||
+                  !isJoinCompetition ||
+                  !isLeader ||
+                  isFinalized
+                }
+                onClick={async () => {
+                  await fetchAllUsers();
+                  setIsRunFind(true);
+                }}
               >
-                {skillOptions.length === 0 ? (
-                  <div className="px-4 py-2 text-gray-500 text-sm">
-                    No skills available
-                  </div>
-                ) : (
-                  skillOptions.map((skill: any) => {
-                    const isSelected = selectedSkills.includes(skill.value);
-                    return (
-                      <button
-                        key={skill.value}
-                        onClick={() => handleFilterClick(skill.value)}
-                        className={`px-3 py-2.5 rounded-3xl text-xs font-bold border-2 duration-300
+                <SlMagnifier className="font-bold" />
+              </button>
+            </div>
+            <div className="relative">
+              <button
+                ref={buttonRef}
+                type="button"
+                onClick={toggleFilterDropdown}
+                className="h-full bg-white shadow-lg cursor-pointer flex group text-lg items-center w-fit text-blue-500 py-2 px-4 rounded-md duration-300 font-semibold border-2 border-blue-500 hover:bg-white hover:font-bold disabled:cursor-not-allowed disabled:opacity-50"
+                disabled={
+                  memberLength === maxMember ||
+                  !isJoinCompetition ||
+                  !isLeader ||
+                  isFinalized
+                }
+              >
+                <CiFilter className="font-bold text-3xl" />
+              </button>
+
+              {showFilter && (
+                <div
+                  ref={dropdownRef}
+                  className="absolute top-full left-0 mt-2 p-3 bg-white shadow-md rounded-md w-70 z-50 max-h-60 overflow-y-auto flex flex-wrap gap-2"
+                >
+                  {skillOptions.length === 0 ? (
+                    <div className="px-4 py-2 text-gray-500 text-sm">
+                      No skills available
+                    </div>
+                  ) : (
+                    skillOptions.map((skill: any) => {
+                      const isSelected = selectedSkills.includes(skill.value);
+                      return (
+                        <button
+                          key={skill.value}
+                          onClick={() => handleFilterClick(skill.value)}
+                          className={`px-3 py-2.5 rounded-3xl text-xs font-bold border-2 duration-300
               ${
                 isSelected
                   ? "bg-blue-500 text-white border-blue-600"
                   : "bg-white text-blue-500 border-blue-500 hover:bg-blue-500 hover:text-white"
               }`}
-                      >
-                        {skill.label}
-                      </button>
-                    );
-                  })
-                )}
-              </div>
-            )}
-          </div>
-          <RedButton
-            label="Reset"
-            onClick={handleReset}
-            className="h-full cursor-pointer flex gap-2 group text-lg items-center w-fit text-white bg-red-500 py-2 px-4 rounded-md duration-300 font-semibold 
+                        >
+                          {skill.label}
+                        </button>
+                      );
+                    })
+                  )}
+                </div>
+              )}
+            </div>
+            <RedButton
+              label="Reset"
+              onClick={handleReset}
+              className="h-full cursor-pointer flex gap-2 group text-lg items-center w-fit text-white bg-red-500 py-2 px-4 rounded-md duration-300 font-semibold 
                         hover:bg-red-600 hover:duration-300 disabled:cursor-not-allowed disabled:bg-red-300"
-            disabled={isRunFind == false}
-          />
-        </div>
+              disabled={isRunFind == false}
+            />
+          </div>
+        )}
         {isRunFind ? (
           <>
             <div>
@@ -523,7 +527,7 @@ const FindPage = () => {
                     disabled={currentPage === 1}
                     className="px-3 py-1 border rounded disabled:opacity-50"
                   >
-                    {'<<'}
+                    {"<<"}
                   </button>
 
                   {[...Array(totalPages)].map((_, idx) => (
@@ -545,7 +549,7 @@ const FindPage = () => {
                     disabled={currentPage === totalPages}
                     className="px-3 py-1 border rounded disabled:opacity-50"
                   >
-                    {'>>'}
+                    {">>"}
                   </button>
                 </div>
               )}
