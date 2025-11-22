@@ -166,7 +166,9 @@ const TeammatesMainPage = () => {
     }
   }, []);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     try {
       const response = await axios.post(CommonConstant.CreateTeam, {
         team_name: teamName,
@@ -176,6 +178,9 @@ const TeammatesMainPage = () => {
       if (response.data.success) {
         console.log(response.data.message);
         successToast(response.data.message);
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
       } else {
         console.log(error);
         errorToast(response.data.message);
@@ -289,7 +294,7 @@ const TeammatesMainPage = () => {
         setShowFinalizeModal(false);
         setTimeout(() => {
           window.location.reload();
-        }, 1000);
+        }, 3000);
       } else {
         errorToast(response.data.message);
       }
