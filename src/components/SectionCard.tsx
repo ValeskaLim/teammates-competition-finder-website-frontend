@@ -39,49 +39,49 @@ const SectionCard = ({
         className ?? `border-2 p-6 rounded-lg w-fit ${extendedClassName}`
       } ${colorMap[customColor] ?? "border-black"}`}
     >
-        {imageAlign === "left" ? (
-            <div className="flex justify-between gap-20">
-                <div>
-                <div className="flex items-center gap-3 mb-3">
-                    <h2 className="text-[2em] font-bold">{title}</h2>
-                </div>
-                <p className="my-5 text-lg">{description}</p>
-                <BlueButton
-                    label="Learn more"
-                    onClick={() => (window.location.href = link)}
-                    extendedClassName="mt-3"
-                />
-                </div>
-                <div>
-                <img
-                    src={imageSrc}
-                    alt="Card Thumbnail"
-                    className={customSizeImage}
-                />
-                </div>
+      {imageAlign === "left" ? (
+        <div className="flex justify-between gap-20">
+          <div className="text-left">
+            <div className="flex items-center gap-3 mb-3">
+              <h2 className="text-[2em] font-bold">{title}</h2>
             </div>
-        ) : (
-            <div className="flex justify-between gap-20">
-                <div>
-                    <img
-                        src={imageSrc}
-                        alt="Card Thumbnail"
-                        className={customSizeImage}
-                    />
-                </div>
-                <div>
-                    <div className="flex items-center gap-3 mb-3">
-                        <h2 className="text-[2em] font-bold">{title}</h2>
-                    </div>
-                    <p className="my-5 text-lg">{description}</p>
-                    <BlueButton
-                        label="Learn more"
-                        onClick={() => (window.location.href = link)}
-                        extendedClassName="mt-3"
-                    />
-                </div>
+            <p className="my-5 text-lg">{description}</p>
+            <BlueButton
+              label="Learn more"
+              onClick={() => (window.location.href = link)}
+              extendedClassName="mt-3"
+            />
+          </div>
+          <div>
+            <img
+              src={imageSrc}
+              alt="Card Thumbnail"
+              className={customSizeImage}
+            />
+          </div>
+        </div>
+      ) : (
+        <div className="flex justify-between gap-20">
+          <div>
+            <img
+              src={imageSrc}
+              alt="Card Thumbnail"
+              className={customSizeImage}
+            />
+          </div>
+          <div className="text-right">
+            <div className="flex justify-end items-center gap-3 mb-3">
+              <h2 className="text-[2em] font-bold">{title}</h2>
             </div>
-        )}
+            <p className="my-5 text-lg text-right">{description}</p>
+            <BlueButton
+              label="Learn more"
+              onClick={() => (window.location.href = link)}
+              extendedClassName="mt-3"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

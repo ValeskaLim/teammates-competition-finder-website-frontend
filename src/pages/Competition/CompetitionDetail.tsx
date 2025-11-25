@@ -169,45 +169,50 @@ const CompetitionDetail = () => {
   };
 
   return (
-    <div className="main-container">
-      <div className="main-col-container bg-white p-7 rounded-2xl shadow-md">
-        <h1 className="text-4xl mb-4 font-semibold">{competition.title}</h1>
+    <div className="main-container px-4 sm:px-0">
+      <div className="main-col-container bg-white p-4 sm:p-7 rounded-2xl shadow-md">
+        <h1 className="text-2xl sm:text-4xl mb-4 font-semibold">
+          {competition.title}
+        </h1>
+
+        {/* Poster */}
         <div className="w-full h-fit">
           <img
             src={`${CommonConstant.ImageSource}${competition.poster}`}
             alt={competition.title}
-            className="w-full max-h-[500px] object-none cursor-pointer"
+            className="w-full max-h-[500px] object-contain cursor-pointer rounded-lg"
             onClick={() => setIsOpen(true)}
           />
           {isOpen && (
             <div
-              className="fixed inset-0 bg-black/90 flex items-center justify-center z-50"
+              className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-3"
               onClick={() => setIsOpen(false)}
             >
               <img
                 src={`${CommonConstant.ImageSource}${competition.poster}`}
                 alt={competition.title}
-                className="object-contain"
-                style={{ maxWidth: "100%", maxHeight: "100%" }}
+                className="object-contain max-w-full max-h-full"
                 onClick={(e) => e.stopPropagation()}
               />
             </div>
           )}
         </div>
-        <div className="border-2 border-dashed mt-15 p-3 rounded-2xl border-green-500 bg-green-100 text-lg">
+
+        {/* Countdown box */}
+        <div className="border-2 border-dashed mt-10 p-3 rounded-2xl border-green-500 bg-green-100 text-base sm:text-lg">
           <div className="flex flex-col gap-2">
             <div className="flex flex-col items-center">
-              <h2 className="font-semibold text-3xl text-green-700 mb-2">
+              <h2 className="font-semibold text-2xl sm:text-3xl text-green-700 mb-2">
                 Starts In
               </h2>
-              <h3 className="font-semibold text-2xl text-green-700 mb-4">
+              <h3 className="font-semibold text-xl sm:text-2xl text-green-700 mb-4">
                 {countdown}
               </h3>
               <hr className="border w-full text-green-500 border-dashed" />
             </div>
-            <div className="flex w-full">
+            <div className="flex flex-col sm:flex-row w-full gap-4 mt-3">
               <div className="flex flex-col gap-2 w-full">
-                <p className="font-semibold text-green-700 ">
+                <p className="font-semibold text-green-700">
                   Category:{" "}
                   {getFieldLabels(competition.category).map((label, idx) => (
                     <span key={idx}>{label}</span>
@@ -223,14 +228,14 @@ const CompetitionDetail = () => {
                   })}
                 </p>
               </div>
-              <div className="flex flex-col items-start gap-2 w-full">
+              <div className="flex flex-col gap-2 w-full">
                 <p className="font-semibold text-green-700">
                   Min member: {competition.min_member}
                 </p>
                 <p className="font-semibold text-green-700">
                   Max member: {competition.max_member}
                 </p>
-                <p className="font-semibold text-green-700">
+                <p className="font-semibold text-green-700 break-all">
                   Original Url:{" "}
                   <a
                     href={competition.original_url}
@@ -247,12 +252,16 @@ const CompetitionDetail = () => {
             </div>
           </div>
         </div>
-        <p className="whitespace-pre-wrap text-lg mt-10">
+
+        {/* Description */}
+        <p className="whitespace-pre-wrap text-base sm:text-lg mt-10">
           {competition.description}
         </p>
-        <div className="mt-15">
-          <h2 className="text-4xl font-bold">Participant</h2>
-          <div className="grid grid-cols-3 gap-4 mt-5">
+
+        {/* Participants */}
+        <div className="mt-10">
+          <h2 className="text-2xl sm:text-4xl font-bold">Participant</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-5">
             {participants.length === 0 ? (
               <p className="text-lg">No participants yet.</p>
             ) : (
@@ -261,20 +270,21 @@ const CompetitionDetail = () => {
                   key={participant.id}
                   className="border border-[#BBB5B5] p-4 rounded-lg flex flex-col h-full"
                 >
-                  <h3 className="font-semibold text-2xl">
+                  <h3 className="font-semibold text-xl sm:text-2xl">
                     {participant.team_name}
                   </h3>
                   <div className="ml-3 my-3">
                     {participant.members.map((member, index) => (
-                      <ul key={index} className="text-lg">
+                      <ul key={index} className="text-base sm:text-lg">
                         <li>{"> " + member}</li>
                       </ul>
                     ))}
                   </div>
                   <div className="mt-auto">
-                    <p className="font-bold mt-10 text-lg">
+                    <p className="font-bold mt-10 text-base sm:text-lg">
                       Notes for candidate
                     </p>
+
                     <div className="mt-3 bg-[#f0f0f0] p-3 rounded-xl">
                       <p className="whitespace-pre-wrap font-semibold">
                         {participant.notes || "-"}

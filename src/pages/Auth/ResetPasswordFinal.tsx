@@ -12,6 +12,7 @@ const ResetPasswordFinal = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const { successToast, errorToast, warningToast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
 
@@ -53,6 +54,7 @@ const ResetPasswordFinal = () => {
 
       if (response.data.success) {
         successToast("Password reset successful!");
+        setIsSubmitting(true);
         setTimeout(() => {
           navigate(ROUTE_PATHS.LOGIN, { replace: true });
         }, 3000);
@@ -66,38 +68,40 @@ const ResetPasswordFinal = () => {
   };
 
   return (
-    <div>
-      <div className="w-full min-h-screen flex justify-center items-center flex-col">
-        <div className="border border-[#BBB5B5] bg-white shadow-lg p-10 rounded-3xl w-200">
-          {isTokenValid ? (
-            <form onSubmit={handleSubmit} method="POST">
-              <input
-                type="password"
-                id="password"
-                placeholder="Your new password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="mt-5 py-2 px-3 w-full rounded-xl border border-[#BBB5B5] focus:outline-blue-400 text-xl"
-              />
-              <input
-                type="password"
-                id="confirmpassword"
-                placeholder="Confirm your new password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                className="mt-5 py-2 px-3 w-full rounded-xl border border-[#BBB5B5] focus:outline-blue-400 text-xl"
-              />
-              <GreenButton label="Submit" extendedClassName="mt-5" />
-            </form>
-          ) : (
-            <p className="bg-red-100 p-2 text-red-700 font-semibold mt-3 rounded-lg text-wrap w-full">
-              The password reset link is invalid or has expired. Please request
-              a new password reset link.
-            </p>
-          )}
-        </div>
+    <div className="min-h-screen w-full flex justify-center items-center px-4 py-10">
+      <div className="border border-[#BBB5B5] bg-white shadow-lg p-8 md:p-10 rounded-3xl w-full max-w-md">
+        {isTokenValid ? (
+          <form onSubmit={handleSubmit} method="POST" className="flex flex-col">
+            <input
+              type="password"
+              id="password"
+              placeholder="Your new password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="mt-5 py-2 px-3 w-full rounded-xl border border-[#BBB5B5] bg-white focus:outline-blue-500 text-lg"
+            />
+            <input
+              type="password"
+              id="confirmpassword"
+              placeholder="Confirm your new password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              className="mt-5 py-2 px-3 w-full rounded-xl border border-[#BBB5B5] bg-white focus:outline-blue-500 text-lg"
+            />
+            <GreenButton
+              label="Submit"
+              extendedClassName="mt-6 w-full disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isSubmitting}
+            />
+          </form>
+        ) : (
+          <p className="bg-red-100 p-3 text-red-700 font-semibold rounded-lg text-center">
+            The password reset link is invalid or has expired. Please request a
+            new password reset link.
+          </p>
+        )}
       </div>
     </div>
   );

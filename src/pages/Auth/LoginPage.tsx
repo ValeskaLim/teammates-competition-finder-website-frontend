@@ -30,65 +30,63 @@ function LoginPage() {
   };
 
   return (
-    <div className="w-full min-h-screen flex justify-center items-center">
-      <div className="flex flex-col h-fit w-150 border border-[#BBB5B5] bg-white  p-5 rounded-2xl justify-center">
-        <h2 className="text-4xl text-center">Login</h2>
+    <div className="w-full min-h-screen flex justify-center items-center p-4 sm:p-6">
+      <div className="w-full max-w-md border border-gray-300 bg-white p-6 sm:p-8 rounded-2xl shadow-sm">
+        <h2 className="text-3xl sm:text-4xl font-semibold text-center">
+          Login
+        </h2>
         <form onSubmit={handleSubmit} method="POST">
-          <div className="flex flex-col gap-2 mt-4">
-            <label className="text-lg">Email</label>
-            <input
-              type="email"
-              id="email"
-              placeholder="Your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="lowercase p-2 w-full border border-[#BBB5B5] rounded-lg text-gray-900 placeholder:text-gray-400 focus:outline"
-            ></input>
-            <label className="text-lg">Password</label>
-            <div className="border flex border-[#BBB5B5] rounded-lg w-full">
+          <div className="flex flex-col gap-4 mt-6">
+            <div className="flex flex-col gap-1">
+              <label className="text-lg">Email</label>
               <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                placeholder="Your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="p-2 w-full focus:outline-none text-gray-900 placeholder:text-gray-400"
-              ></input>
-              {showPassword ? (
-                <div
-                  className="flex flex-col justify-center mr-2"
-                  onClick={() => setShowPassword(false)}
-                >
-                  <IoMdEyeOff className="flex items-center text-xl" />
-                </div>
-              ) : (
-                <div
-                  className="flex flex-col justify-center mr-2"
-                  onClick={() => setShowPassword(true)}
-                >
-                  <IoMdEye className="flex items-center text-xl" />
-                </div>
-              )}
+                type="email"
+                id="email"
+                placeholder="Your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="lowercase p-3 border border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400 focus:outline-blue-400"
+              />
             </div>
-            <div className="flex justify-between">
+            <div className="flex flex-col gap-1">
+              <label className="text-lg">Password</label>
+              <div className="border border-gray-300 rounded-lg flex items-center">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  placeholder="Your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="p-3 w-full focus:outline-none text-gray-900 placeholder:text-gray-400"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="p-2 text-xl text-gray-600 hover:text-gray-800"
+                >
+                  {showPassword ? <IoMdEyeOff /> : <IoMdEye />}
+                </button>
+              </div>
+            </div>
+            <div className="flex flex-col sm:flex-row justify-between gap-2 text-sm sm:text-base mt-2">
               <a
                 href={ROUTE_PATHS.REGISTER}
-                className="text-blue-400 duration-300 hover:duration:300 hover:text-blue-500 hover:underline"
+                className="text-blue-500 hover:text-blue-600 hover:underline"
               >
-                Don't have account? Register here
+                Don't have an account? Register
               </a>
               <a
                 href={ROUTE_PATHS.RESET_PASSWORD}
-                className="text-blue-400 duration-300 hover:duration:300 hover:text-blue-500 hover:underline"
+                className="text-blue-500 hover:text-blue-600 hover:underline"
               >
                 Forgot password?
               </a>
             </div>
           </div>
-          <div className="flex justify-center">
+          <div className="flex justify-center mt-10">
             <button
               type="submit"
-              className="w-1/2 font-semibold cursor-pointer bg-blue-500 text-white mt-12 p-2 rounded-xl duration-300 hover:bg-blue-600 hover:duration-300"
+              className="w-2/3 sm:w-1/2 font-semibold cursor-pointer bg-blue-500 text-white p-3 rounded-xl duration-300 hover:bg-blue-600"
             >
               Submit
             </button>

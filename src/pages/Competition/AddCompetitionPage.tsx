@@ -34,7 +34,7 @@ const AddCompetitionPage = () => {
     const fetchCategories = async () => {
       try {
         const response = await axios.post(CommonConstant.GetAllCategories);
-        if(response.data.success) {
+        if (response.data.success) {
           const categories = response.data.data || [];
 
           const options = categories.map((item: any) => ({
@@ -49,7 +49,7 @@ const AddCompetitionPage = () => {
         const errorMessage = error.data.message;
         errorToast(errorMessage);
       }
-    }
+    };
 
     fetchCategories();
   }, []);
@@ -171,18 +171,22 @@ const AddCompetitionPage = () => {
             </select>
           </div>
           <div className="flex flex-col">
-              <label className="text-lg items-center flex w-fit">Original Url</label>
-              <input
-                type="text"
-                id="originalUrl"
-                placeholder="Input original URL"
-                value={originalUrl}
-                onChange={(e) => setOriginalUrl(e.target.value)}
-                className="text-md mt-3 p-2 border border-[#BBB5B5] rounded-lg w-full"
-              />
-            </div>
+            <label className="text-lg items-center flex w-fit">
+              Original Url
+            </label>
+            <input
+              type="text"
+              id="originalUrl"
+              placeholder="Input original URL"
+              value={originalUrl}
+              onChange={(e) => setOriginalUrl(e.target.value)}
+              className="text-md mt-3 p-2 border border-[#BBB5B5] rounded-lg w-full"
+            />
+          </div>
           <div className="flex flex-col">
-            <label className="text-lg items-center flex w-fit">Min member</label>
+            <label className="text-lg items-center flex w-fit">
+              Min member
+            </label>
             <input
               type="number"
               id="min-member"
@@ -198,7 +202,9 @@ const AddCompetitionPage = () => {
             />
           </div>
           <div className="flex flex-col">
-            <label className="text-lg items-center flex w-fit">Max member</label>
+            <label className="text-lg items-center flex w-fit">
+              Max member
+            </label>
             <input
               type="number"
               id="max-member"
@@ -240,9 +246,13 @@ const AddCompetitionPage = () => {
               className="text-md mt-3 p-2 border border-[#BBB5B5] rounded-lg w-full"
             />
           </div>
-          <div className="flex gap-2">
-            <GreenButton label="Submit" />
-            <RedButton label="Cancel" onClick={() => navigate(-1)} />
+          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 mt-7">
+            <GreenButton label="Submit" extendedClassName="w-full sm:w-auto" />
+            <RedButton
+              label="Cancel"
+              onClick={() => navigate(-1)}
+              extendedClassName="w-full sm:w-auto"
+            />
           </div>
         </form>
       </div>

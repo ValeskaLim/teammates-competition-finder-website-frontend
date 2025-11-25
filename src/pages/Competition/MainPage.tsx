@@ -23,6 +23,7 @@ const MainPage = () => {
   const [teamData, setTeamData] = useState(undefined);
   const [isAlreadyJoinedCompetition, setIsAlreadyJoinedCompetition] =
     useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { users } = useAuth();
   const location = useLocation();
   const { pathname } = location;
@@ -143,6 +144,7 @@ const MainPage = () => {
         competition_id: competition_id,
       });
       if (response.data.success) {
+        setIsSubmitting(true);
         setTimeout(() => {
           window.location.reload();
         }, 3000);
@@ -170,9 +172,11 @@ const MainPage = () => {
   };
 
   return (
-    <div className="main-container">
+    <div className="main-container px-4 sm:px-6 lg:px-10">
       <div className="main-col-container">
-        <h1 className="text-4xl mb-4 w-full">Competition List</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold mb-4 w-full">
+          Competition List
+        </h1>
         {users?.role === "admin" && (
           <div className="w-full">
             <BlueButton
@@ -186,120 +190,180 @@ const MainPage = () => {
           {competitions.length === 0 ? (
             <p>No competitions available.</p>
           ) : (
-            <ul className="space-y-2 grid grid-cols-3 gap-2">
+            <ul
+              className="
+                grid 
+                grid-cols-1 
+                sm:grid-cols-2 
+                lg:grid-cols-3 
+                gap-6 
+                w-full
+              "
+            >
               {currentCompetitions.map((comp: any, idx) => (
-                <>
-                  <div>
-                    <li
-                      key={idx}
-                      className="border border-[#BBB5B5] bg-white rounded-xl shadow-sm h-full flex flex-col"
-                    >
-                      <img
-                        src={`${CommonConstant.ImageSource}${comp.poster}`}
-                        alt={comp.title}
-                        className="w-full h-48 object-cover rounded-t-lg"
-                      />
-                      <div className="flex justify-between p-3">
-                        <div>
-                          <h3 className="font-semibold text-xl">
-                            {comp.title}
-                          </h3>
-                          <p className="text-gray-600">
-                            {new Date(comp.date).toLocaleString("id-ID", {
-                              dateStyle: "long",
-                            })}
-                          </p>
-                          <p className="pt-2 text-gray-600 text-md">
-                            {`Min member: ${comp.min_member} | Max member: ${comp.max_member}`}
-                          </p>
-                          <p className="mt-3 break-all">
-                            {comp.description.length > 170
-                              ? `${comp.description.substring(0, 140)}...`
-                              : comp.description}
-                          </p>
-                        </div>
-                        <div>
-                          <div
-                            className={`cursor-default px-2 py-1 rounded-md font-semibold border-2 ${
-                              comp.status === "ACT"
-                                ? " text-green-600 border-green-600"
-                                : "text-gray-500 border-gray-500"
-                            }`}
-                          >
-                            {getStatusLabel(comp.status)}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex gap-1 mt-2 h-full px-3 pb-3">
-                        {users?.role === "admin" && (
-                          <>
-                            <BlueButton
-                              label="Edit"
-                              onClick={() =>
-                                navigate(
-                                  `${ROUTE_PATHS.EDIT_COMPETITION}/${comp.competition_id}`
-                                )
-                              }
-                              extendedClassName="self-end h-fit"
-                            />
-                            <RedButton
-                              label="Delete"
-                              onClick={async () => {
-                                const result = await Swal.fire({
-                                  title: "Are you sure?",
-                                  text: "You won't be able to revert this!",
-                                  icon: "warning",
-                                  showCancelButton: true,
-                                  confirmButtonColor: "#3085d6",
-                                  cancelButtonColor: "#d33",
-                                  confirmButtonText: "Remove",
-                                });
+                <li
+                  key={idx}
+                  className="
+                    border border-[#BBB5B5]
+                    bg-white 
+                    rounded-xl 
+                    shadow-sm 
+                    flex 
+                    flex-col
+                    h-full
+                  "
+                >
+                  <img
+                    src={`${CommonConstant.ImageSource}${comp.poster}`}
+                    alt={comp.title}
+                    className="w-full h-48 object-cover rounded-t-lg"
+                  />
+                  <div className="flex justify-between p-3">
+                    <div className="max-w-[70%]">
+                      <h3 className="font-semibold text-xl">{comp.title}</h3>
 
-                                if (result.isConfirmed) {
-                                  await deleteCompetition(comp.competition_id);
-
-                                  await Swal.fire({
-                                    title: "Competition Removed!",
-                                    text: `${comp.title} has been removed.`,
-                                    icon: "success",
-                                  });
-                                }
-                              }}
-                            />
-                          </>
-                        )}
-                        <BlueButton
-                          label="View Details"
-                          onClick={() =>
-                            viewCompetitionDetail(comp, comp.competition_id)
-                          }
-                        />
-                        {!isAlreadyJoinedCompetition ? (
-                          <button
-                            onClick={() => handleWishlist(comp.competition_id)}
-                            className="self-end cursor-pointer h-[40px] items-center font-semibold border-2 py-2 px-3 rounded-md duration-300 text-red-500 bg-white border-red-500 hover:duration-300"
-                          >
-                            <HiOutlinePlusCircle className="text-2xl font-bold" />
-                          </button>
-                        ) : (
-                          wishlistedTeam == comp.competition_id && (
-                            <button
-                              className="self-end cursor-not-allowed h-[40px] items-center font-semibold border-2 py-2 px-3 rounded-md duration-300 text-white bg-red-400 enabled:hover:bg-red-500 border-none disabled:bg-red-300 disabled:text-white hover:duration-300"
-                              disabled
-                            >
-                              <HiOutlinePlusCircle className="text-2xl font-bold" />
-                            </button>
-                          )
-                        )}
+                      <p className="text-gray-600">
+                        {new Date(comp.date).toLocaleString("id-ID", {
+                          dateStyle: "long",
+                        })}
+                      </p>
+                      <p className="pt-2 text-gray-600 text-md">
+                        {`Min member: ${comp.min_member} | Max member: ${comp.max_member}`}
+                      </p>
+                      <p className="mt-3 break-all text-sm">
+                        {comp.description.length > 170
+                          ? `${comp.description.substring(0, 140)}...`
+                          : comp.description}
+                      </p>
+                    </div>
+                    <div>
+                      <div
+                        className={`cursor-default px-2 py-1 rounded-md font-semibold border-2 text-sm ${
+                          comp.status === "ACT"
+                            ? "text-green-600 border-green-600"
+                            : "text-gray-500 border-gray-500"
+                        }`}
+                      >
+                        {getStatusLabel(comp.status)}
                       </div>
-                    </li>
+                    </div>
                   </div>
-                </>
+
+                  {/* Buttons */}
+                  <div
+                    className="
+                      flex 
+                      flex-wrap 
+                      gap-2 
+                      px-3 
+                      pb-3 
+                      mt-auto
+                    "
+                  >
+                    {users?.role === "admin" && (
+                      <>
+                        <BlueButton
+                          label="Edit"
+                          onClick={() =>
+                            navigate(
+                              `${ROUTE_PATHS.EDIT_COMPETITION}/${comp.competition_id}`
+                            )
+                          }
+                          extendedClassName="h-fit"
+                        />
+                        <RedButton
+                          label="Delete"
+                          onClick={async () => {
+                            const result = await Swal.fire({
+                              title: "Are you sure?",
+                              text: "You won't be able to revert this!",
+                              icon: "warning",
+                              showCancelButton: true,
+                              confirmButtonColor: "#3085d6",
+                              cancelButtonColor: "#d33",
+                              confirmButtonText: "Remove",
+                            });
+                            if (result.isConfirmed) {
+                              await deleteCompetition(comp.competition_id);
+                              await Swal.fire({
+                                title: "Competition Removed!",
+                                text: `${comp.title} has been removed.`,
+                                icon: "success",
+                              });
+                            }
+                          }}
+                        />
+                      </>
+                    )}
+                    <BlueButton
+                      label="View Details"
+                      onClick={() =>
+                        viewCompetitionDetail(comp, comp.competition_id)
+                      }
+                    />
+                    {!isAlreadyJoinedCompetition ? (
+                      <button
+                        onClick={() => handleWishlist(comp.competition_id)}
+                        className="
+                          flex 
+                          items-center 
+                          justify-center
+                          h-[40px] 
+                          px-3 
+                          py-2 
+                          font-semibold 
+                          border-2 
+                          text-red-500 
+                          border-red-500 
+                          rounded-md 
+                          bg-white 
+                          hover:bg-red-50
+                          duration-200
+                          disabled:opacity-50 disabled:cursor-not-allowed
+                        "
+                        disabled={isSubmitting}
+                      >
+                        <HiOutlinePlusCircle className="text-2xl" />
+                      </button>
+                    ) : (
+                      wishlistedTeam == comp.competition_id && (
+                        <button
+                          className="
+                            flex 
+                            items-center 
+                            justify-center
+                            h-[40px] 
+                            px-3 
+                            py-2
+                            cursor-not-allowed 
+                            rounded-md 
+                            bg-red-400 
+                            text-white 
+                          "
+                          disabled
+                        >
+                          <HiOutlinePlusCircle className="text-2xl" />
+                        </button>
+                      )
+                    )}
+                  </div>
+                </li>
               ))}
             </ul>
           )}
         </div>
-        <div className="flex justify-end gap-2 mt-6">
+
+        {/* Pagination */}
+        <div
+          className="
+            flex 
+            flex-wrap 
+            justify-center 
+            lg:justify-end 
+            gap-2 
+            mt-6
+          "
+        >
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
@@ -307,19 +371,17 @@ const MainPage = () => {
           >
             {"<<"}
           </button>
-
           {[...Array(totalPages)].map((_, idx) => (
             <button
               key={idx}
               onClick={() => setCurrentPage(idx + 1)}
               className={`px-3 py-1 border rounded ${
-                currentPage === idx + 1 ? "bg-blue-500 text-white" : ""
+                currentPage === idx + 1 ? "bg-blue-500 text-white" : "bg-white"
               }`}
             >
               {idx + 1}
             </button>
           ))}
-
           <button
             onClick={() =>
               setCurrentPage((prev) => Math.min(prev + 1, totalPages))

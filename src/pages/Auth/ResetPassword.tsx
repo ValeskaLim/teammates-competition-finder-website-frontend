@@ -25,32 +25,33 @@ const ResetPassword = () => {
   };
 
   return (
-    <div>
-      <div className="w-full min-h-screen flex justify-center items-center flex-col">
-        <div className="bg-white shadow-lg p-10 rounded-3xl border border-[#BBB5B5] w-200">
-          <h1 className="text-3xl font-bold">Reset Password</h1>
-          <p className="text-lg mt-13">
-            Please enter your email address to receive a password reset link.
+    <div className="min-h-screen w-full flex justify-center items-center px-4 py-10">
+      <div className="bg-white shadow-lg p-8 md:p-10 rounded-3xl border border-[#BBB5B5] w-full max-w-lg">
+        <h1 className="text-2xl md:text-3xl font-bold text-center">
+          Reset Password
+        </h1>
+        <p className="text-base md:text-lg mt-6 text-center">
+          Please enter your email address to receive a password reset link.
+        </p>
+        {isSubmit && (
+          <p className="bg-green-100 p-3 text-green-700 font-semibold mt-4 rounded-lg text-center">
+            A password reset link has been sent to your email.
+            <br />
+            Please check your inbox and follow the instructions.
           </p>
-          {isSubmit && (
-            <p className="bg-green-100 p-2 text-green-700 font-semibold mt-3 rounded-lg text-wrap w-fit">
-              A password reset link has been sent to your email. <br/>Please check
-              your inbox and follow the instructions to reset your password.
-            </p>
-          )}
-          <form onSubmit={handleSubmit} method="POST">
-            <input
-              type="email"
-              id="email"
-              placeholder="Your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="mt-5 py-2 px-3 w-full rounded-xl border border-[#BBB5B5] bg-white focus:outline-blue-400 text-xl"
-            />
-            <GreenButton label="Submit" extendedClassName="mt-5" />
-          </form>
-        </div>
+        )}
+        <form onSubmit={handleSubmit} method="POST" className="mt-6">
+          <input
+            type="email"
+            id="email"
+            placeholder="Your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="py-2 px-3 w-full rounded-xl border border-[#BBB5B5] bg-white focus:outline-blue-500 text-lg"
+          />
+          <GreenButton label="Submit" extendedClassName="mt-5 w-full" />
+        </form>
       </div>
     </div>
   );

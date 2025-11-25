@@ -52,7 +52,6 @@ const VerifyPage = () => {
           </p>
         </div>
       )}
-
       {errorMsg === "Token expired and has been invalidated" && (
         <div className="w-full min-h-screen flex justify-center items-center flex-col">
           <h1 className="text-2xl font-bold">Token expired</h1>
@@ -61,7 +60,6 @@ const VerifyPage = () => {
           </p>
         </div>
       )}
-
       {errorMsg === "" && (
         <div className="w-full min-h-screen flex justify-center items-center flex-col">
           <h1 className="text-2xl font-bold">{successMsg}</h1>

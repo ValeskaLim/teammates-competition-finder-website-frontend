@@ -36,25 +36,23 @@ const NonEditProfile = ({ users, setIsEdit }) => {
     fetchSkillsets();
   }, []);
   return (
-    <div className="mx-50 bg-white rounded-2xl shadow-xl p-5">
-      <h1 className="font-bold text-4xl">
+    <div className="w-full max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-5 sm:p-8 lg:p-10">
+      <h1 className="font-bold text-3xl sm:text-4xl">
         {users?.fullname}'s <span className="font-normal">Profile</span>
       </h1>
       <div className="w-full">
-        <form className="mt-10">
-          <div className="flex flex-col justify-between">
-            <h3 className="required flex items-center text-lg w-fit">
-              Username
-            </h3>
+        <form className="mt-8 sm:mt-10">
+          <div className="flex flex-col">
+            <h3 className="required text-lg">Username</h3>
             <input
               type="text"
               disabled
               value={users?.username}
-              className="text-md mt-3 bg-[#f2f2f2] p-2 border border-[#e6e6e6] rounded-lg w-full"
+              className="text-md mt-3 bg-[#f2f2f2] p-3 border border-[#e6e6e6] rounded-lg w-full"
             />
           </div>
-          <div className="flex flex-col justify-between mt-4">
-            <h3 className="flex items-center text-lg w-fit">Password</h3>
+          <div className="flex flex-col mt-5">
+            <h3 className="text-lg">Password</h3>
             <div className="w-full mt-3">
               <BlueButton
                 label="Change"
@@ -63,46 +61,44 @@ const NonEditProfile = ({ users, setIsEdit }) => {
               />
             </div>
           </div>
-          <div className="flex flex-col justify-between mt-4">
-            <h3 className="required flex items-center text-lg w-fit">Email</h3>
+          <div className="flex flex-col mt-5">
+            <h3 className="required text-lg">Email</h3>
             <input
               type="email"
               disabled
               value={users?.email}
-              className="text-md mt-3 bg-[#f2f2f2] p-2 border border-[#e6e6e6] rounded-lg w-full"
+              className="text-md mt-3 bg-[#f2f2f2] p-3 border border-[#e6e6e6] rounded-lg w-full"
             />
           </div>
-          <div className="flex flex-col justify-between mt-4">
-            <h3 className="flex items-center text-lg w-fit">Gender</h3>
+          <div className="flex flex-col mt-5">
+            <h3 className="text-lg">Gender</h3>
             <input
               type="text"
               disabled
               value={users?.gender === "L" ? "Laki-Laki" : "Perempuan"}
-              className="text-md mt-3 bg-[#f2f2f2] p-2 border border-[#e6e6e6] rounded-lg w-full"
+              className="text-md mt-3 bg-[#f2f2f2] p-3 border border-[#e6e6e6] rounded-lg w-full"
             />
           </div>
-          <div className="flex flex-col justify-between mt-4">
-            <h3 className="flex items-center text-lg w-fit">Semester</h3>
+          <div className="flex flex-col mt-5">
+            <h3 className="text-lg">Semester</h3>
             <input
               type="number"
               disabled
               value={users?.semester}
-              className="text-md mt-3 bg-[#f2f2f2] p-2 border border-[#e6e6e6] rounded-lg w-full"
+              className="text-md mt-3 bg-[#f2f2f2] p-3 border border-[#e6e6e6] rounded-lg w-full"
             />
           </div>
-          <div className="flex flex-col justify-between mt-4">
-            <h3 className="required flex items-center text-lg w-fit">Major</h3>
+          <div className="flex flex-col mt-5">
+            <h3 className="required text-lg">Major</h3>
             <input
               type="text"
               disabled
               value={users?.major}
-              className="text-md mt-3 bg-[#f2f2f2] p-2 border border-[#e6e6e6] rounded-lg w-full"
+              className="text-md mt-3 bg-[#f2f2f2] p-3 border border-[#e6e6e6] rounded-lg w-full"
             />
           </div>
-          <div className="flex flex-col justify-between mt-4">
-            <h3 className="required flex items-center text-lg w-fit">
-              Field of preference
-            </h3>
+          <div className="flex flex-col mt-5">
+            <h3 className="required text-lg">Field of Preference</h3>
             <Select
               isMulti
               name="field_of_preference"
@@ -117,19 +113,19 @@ const NonEditProfile = ({ users, setIsEdit }) => {
               isDisabled
             />
           </div>
-          <div className="flex flex-col justify-between mt-4">
-            <h3 className="flex items-center text-lg w-fit">Portfolio link</h3>
+          <div className="flex flex-col mt-5">
+            <h3 className="text-lg">Portfolio Link</h3>
             <input
               type="text"
               disabled
               value={users?.portfolio}
-              className="text-md mt-3 bg-[#f2f2f2] p-2 border border-[#e6e6e6] rounded-lg w-full"
+              className="text-md mt-3 bg-[#f2f2f2] p-3 border border-[#e6e6e6] rounded-lg w-full"
             />
           </div>
           <BlueButton
             label="Edit Profile"
             onClick={() => setIsEdit(true)}
-            extendedClassName="mt-5"
+            extendedClassName="mt-7 w-full sm:w-1/4 md:w-1/6 mx-auto"
           />
         </form>
       </div>

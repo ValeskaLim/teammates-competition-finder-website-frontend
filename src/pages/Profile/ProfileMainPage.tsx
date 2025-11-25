@@ -10,9 +10,9 @@ const ProfileMainPage = () => {
   return (
     <div className="main-container">
       {isEdit ? (
-        <EditProfile users={users} setIsEdit={setIsEdit}/>
+        <EditProfile users={users} setIsEdit={setIsEdit} />
       ) : (
-        <NonEditProfile users={users} setIsEdit={setIsEdit}/>
+        <NonEditProfile users={users} setIsEdit={setIsEdit} />
       )}
     </div>
   );

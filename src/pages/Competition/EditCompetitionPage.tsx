@@ -75,7 +75,7 @@ const EditCompetitionPage = () => {
     const fetchCategories = async () => {
       try {
         const response = await axios.post(CommonConstant.GetAllCategories);
-        if(response.data.success) {
+        if (response.data.success) {
           const categories = response.data.data || [];
 
           const options = categories.map((item: any) => ({
@@ -90,7 +90,7 @@ const EditCompetitionPage = () => {
         const errorMessage = error.data.message;
         errorToast(errorMessage);
       }
-    }
+    };
 
     fetchCategories();
   }, []);
@@ -242,7 +242,9 @@ const EditCompetitionPage = () => {
             />
           </div>
           <div className="flex flex-col">
-            <label className="text-lg items-center flex w-fit">Min member</label>
+            <label className="text-lg items-center flex w-fit">
+              Min member
+            </label>
             <input
               type="number"
               id="min-member"
@@ -258,7 +260,9 @@ const EditCompetitionPage = () => {
             />
           </div>
           <div className="flex flex-col">
-            <label className="text-lg items-center flex w-fit">Max member</label>
+            <label className="text-lg items-center flex w-fit">
+              Max member
+            </label>
             <input
               type="number"
               id="max-member"
@@ -299,9 +303,17 @@ const EditCompetitionPage = () => {
               className="text-md mt-3 p-2 border border-[#BBB5B5] rounded-lg w-full"
             />
           </div>
-          <div className="flex gap-2">
-            <GreenButton type="submit" label="Save" />
-            <RedButton label="Cancel" onClick={() => navigate(-1)} />
+          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 mt-7">
+            <GreenButton
+              type="submit"
+              label="Save"
+              extendedClassName="w-full sm:w-auto"
+            />
+            <RedButton
+              label="Cancel"
+              onClick={() => navigate(-1)}
+              extendedClassName="w-full sm:w-auto"
+            />
           </div>
         </form>
       </div>

@@ -112,116 +112,123 @@ function RegisterPage() {
   };
 
   return (
-    <div className="w-full min-h-screen flex justify-center items-center">
-      <div className="flex flex-col h-fit w-150 border border-[#BBB5B5] bg-white p-5 rounded-2xl justify-center">
-        <h2 className="text-4xl text-center">Register</h2>
+    <div className="w-full min-h-screen flex justify-center items-center p-4 sm:p-6">
+      <div className="w-full max-w-lg bg-white border border-gray-300 p-6 sm:p-8 rounded-2xl shadow-sm">
+        <h2 className="text-3xl sm:text-4xl font-semibold text-center">
+          Register
+        </h2>
         <form onSubmit={handleSubmit} method="POST">
-          <div className="flex flex-col gap-2 mt-4">
-            <label className="text-lg">Full Name</label>
-            <input
-              type="text"
-              id="fullname"
-              placeholder="Your full name"
-              value={fullname}
-              onChange={(e) => setFullname(e.target.value)}
-              className="p-2 w-full border border-[#BBB5B5] rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline"
-              required
-            ></input>
-            <label className="text-lg">Username</label>
-            <input
-              type="text"
-              id="username"
-              placeholder="Your username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="p-2 w-full border border-[#BBB5B5] rounded-lg text-gray-900 placeholder:text-gray-400 focus:outline"
-              required
-            ></input>
-            <label className="text-lg">Email</label>
-            <input
-              type="email"
-              id="email"
-              placeholder="Your email (example@gmail.com)"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="lowercase p-2 w-full border border-[#BBB5B5] rounded-lg text-gray-900 placeholder:text-gray-400 focus:outline"
-              required
-            ></input>
-            <label className="text-lg">Password</label>
-            <div className="flex item-center w-full border border-[#BBB5B5] rounded-lg">
+          <div className="flex flex-col gap-4 mt-6">
+            <div className="flex flex-col gap-1">
+              <label className="text-lg">Full Name</label>
               <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                placeholder="Password length must be more than 3"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="p-2 w-full focus:outline-hidden text-gray-900 placeholder:text-gray-400 focus:outline"
+                type="text"
+                id="fullname"
+                placeholder="Your full name"
+                value={fullname}
+                onChange={(e) => setFullname(e.target.value)}
+                className="p-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-blue-400"
                 required
-              ></input>
-              {showPassword ? (
-                <div className="flex flex-col justify-center mr-2" onClick={() => setShowPassword(false)}>
-                  <IoMdEyeOff className="flex items-center text-xl" />
-                </div>
-              ) : (
-                <div className="flex flex-col justify-center mr-2" onClick={() => setShowPassword(true)}>
-                  <IoMdEye className="flex items-center text-xl" />
-                </div>
-              )}
+              />
             </div>
-            <label className="text-lg">Gender</label>
-            <select
-              name="gender"
-              id="gender"
-              value={gender}
-              onChange={(e) => setGender(e.target.value)}
-              className="p-2 border border-[#BBB5B5] rounded-lg text-gray-900 placeholder:text-gray-400 focus:outline"
-              required
-            >
-              <option value="" hidden>
-                --Select One--
-              </option>
-              <option value="L">Laki-laki</option>
-              <option value="P">Perempuan</option>
-            </select>
-            <label className="text-lg">Semester</label>
-            <select
-              name="semester"
-              id="semester"
-              value={semester}
-              onChange={(e) => setSemester(e.target.value)}
-              className="p-2 w- border border-[#BBB5B5] rounded-lg text-gray-900 placeholder:text-gray-400 focus:outline"
-              required
-            >
-              <option value="" hidden>
-                --Select One--
-              </option>
-              {Array.from({ length: 8 }, (_, i) => (
-                <option value={i + 1} key={i + 1}>
-                  {i + 1}
+            <div className="flex flex-col gap-1">
+              <label className="text-lg">Username</label>
+              <input
+                type="text"
+                id="username"
+                placeholder="Your username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="p-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-blue-400"
+                required
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-lg">Email</label>
+              <input
+                type="email"
+                id="email"
+                placeholder="example@gmail.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="p-3 lowercase border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-blue-400"
+                required
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-lg">Password</label>
+              <div className="border border-gray-300 rounded-lg flex items-center">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  placeholder="Password must be > 3 characters"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="p-3 w-full text-gray-900 placeholder-gray-400 focus:outline-none"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="p-2 text-xl text-gray-600 hover:text-gray-800"
+                >
+                  {showPassword ? <IoMdEyeOff /> : <IoMdEye />}
+                </button>
+              </div>
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-lg">Gender</label>
+              <select
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+                className="p-3 border border-gray-300 rounded-lg text-gray-900 focus:outline-blue-400"
+                required
+              >
+                <option value="" hidden>
+                  --Select One--
                 </option>
-              ))}
-            </select>
-            <label className="text-lg">Field of preference</label>
-            <Select
-              isMulti
-              name="field_of_preference"
-              options={skillOptions}
-              className="basic-multi-select w-full"
-              classNamePrefix="select"
-              // value={fieldOfPreference}
-              onChange={(selectedOptions) =>
-                setFieldOfPreference(
-                  (selectedOptions as OptionType[]).map((opt) => opt.value)
-                )
-              }
-              closeMenuOnSelect={false}
-              required
-            />
+                <option value="L">Laki-laki</option>
+                <option value="P">Perempuan</option>
+              </select>
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-lg">Semester</label>
+              <select
+                value={semester}
+                onChange={(e) => setSemester(e.target.value)}
+                className="p-3 border border-gray-300 rounded-lg text-gray-900 focus:outline-blue-400"
+                required
+              >
+                <option value="" hidden>
+                  --Select One--
+                </option>
+                {Array.from({ length: 8 }, (_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-lg">Field of Preference</label>
+              <Select
+                isMulti
+                options={skillOptions}
+                onChange={(selectedOptions) =>
+                  setFieldOfPreference(
+                    (selectedOptions as OptionType[]).map((opt) => opt.value)
+                  )
+                }
+                className="w-full"
+                classNamePrefix="select"
+                closeMenuOnSelect={false}
+              />
+            </div>
           </div>
-          <div className="flex justify-center">
+          <div className="flex justify-center mt-10">
             <button
               type="submit"
-              className="w-1/2 bg-blue-500 cursor-pointer text-white mt-12 p-2 rounded-md duration-300 hover:bg-blue-600 hover:duration-300"
+              className="w-2/3 sm:w-1/2 bg-blue-500 text-white p-3 rounded-xl font-semibold hover:bg-blue-600 duration-300"
             >
               Submit
             </button>

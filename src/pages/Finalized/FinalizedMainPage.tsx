@@ -61,28 +61,34 @@ const FinalizedMainPage = () => {
   };
 
   return (
-    <div className="main-container">
+    <div className="main-container px-4 sm:px-0">
       <div className="main-col-container items-center">
-        <h1 className="text-4xl font-semibold">Finalized List</h1>
-        <div className="w-full mt-20">
+        <h1 className="text-3xl sm:text-4xl font-semibold text-center">
+          Finalized List
+        </h1>
+        <div className="w-full mt-10 sm:mt-20">
           {transactions.length === 0 ? (
+            // Transactions doesn't exist
             <p className="text-center text-lg">
               No finalized transactions available.
             </p>
           ) : (
-            <div className="grid grid-cols-3 gap-4 text-wrap">
+            // Transactions exist
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-wrap">
               {currentTransactions.map((transaction: any) => (
                 <div
                   key={transaction.proof_transaction_id}
-                  className="border border-[#e6e6e6] rounded-2xl p-4 shadow-md mb-4 w-full bg-white"
+                  className="border border-[#e6e6e6] rounded-2xl p-4 shadow-md mb-4 bg-white"
                 >
-                  <h2 className="mb-1 text-2xl">
+                  <h2 className="mb-1 text-xl sm:text-2xl break-all">
                     <span className="font-semibold">
                       {transaction.team_name}
                     </span>
                     's Team
                   </h2>
-                  <h3 className="text-md">{transaction.txn_hash}</h3>
+                  <h3 className="text-sm sm:text-md break-all">
+                    {transaction.txn_hash}
+                  </h3>
                   <hr className="border-dotted my-4" />
                   <p>
                     Status:{" "}
@@ -96,13 +102,13 @@ const FinalizedMainPage = () => {
                       {transaction.block_number}
                     </span>
                   </p>
-                  <p>
+                  <p className="break-all">
                     Competition:{" "}
                     <span className="font-semibold">
                       {transaction.competition_name}
                     </span>
                   </p>
-                  <div className="flex gap-3 mt-5">
+                  <div className="flex flex-col 2xl:flex-row space-y-2 2xl:space-y-0 2xl:space-x-3 mt-7">
                     <BlueButton
                       label="View Proof Image"
                       onClick={() =>
@@ -110,10 +116,12 @@ const FinalizedMainPage = () => {
                           `${CommonConstant.ImageProofSource}/${transaction.proof_image_path}`
                         )
                       }
+                      extendedClassName="w-full 2xl:w-auto 2xl:flex-row"
                     />
                     <BlueButton
                       label="View Transaction Details"
                       onClick={() => handleTextClick(transaction.txn_hash_path)}
+                      extendedClassName="w-full 2xl:w-auto 2xl:flex-row"
                     />
                   </div>
                 </div>
@@ -122,42 +130,40 @@ const FinalizedMainPage = () => {
           )}
         </div>
       </div>
-
-      <div className="flex justify-end gap-2 mt-6">
+      <div className="flex justify-center sm:justify-end gap-2 mt-6 flex-wrap">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className="px-3 py-1 border rounded disabled:opacity-50"
+        >
+          {"<<"}
+        </button>
+        {[...Array(totalPages)].map((_, idx) => (
           <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className="px-3 py-1 border rounded disabled:opacity-50"
+            key={idx}
+            onClick={() => setCurrentPage(idx + 1)}
+            className={`px-3 py-1 border rounded ${
+              currentPage === idx + 1 ? "bg-blue-500 text-white" : ""
+            }`}
           >
-            {"<<"}
+            {idx + 1}
           </button>
+        ))}
+        <button
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
+          disabled={currentPage === totalPages}
+          className="px-3 py-1 border rounded disabled:opacity-50"
+        >
+          {">>"}
+        </button>
+      </div>
 
-          {[...Array(totalPages)].map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentPage(idx + 1)}
-              className={`px-3 py-1 border rounded ${
-                currentPage === idx + 1 ? "bg-blue-500 text-white" : ""
-              }`}
-            >
-              {idx + 1}
-            </button>
-          ))}
-
-          <button
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-            className="px-3 py-1 border rounded disabled:opacity-50"
-          >
-            {">>"}
-          </button>
-        </div>
-
+      {/* Open image modal */}
       {selectedImage && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
+          className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4"
           onClick={() => setSelectedImage(null)}
         >
           <div className="relative">
@@ -176,9 +182,10 @@ const FinalizedMainPage = () => {
         </div>
       )}
 
+      {/* Open text modal */}
       {selectedText && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
+          className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4"
           onClick={() => setSelectedText(null)}
         >
           <div
@@ -188,7 +195,7 @@ const FinalizedMainPage = () => {
             {isTextLoading ? (
               <p className="text-center">Loading details...</p>
             ) : (
-              <pre className="whitespace-pre-wrap font-mono text-sm">
+              <pre className="whitespace-pre-wrap font-mono text-sm break-all">
                 {selectedText}
               </pre>
             )}
