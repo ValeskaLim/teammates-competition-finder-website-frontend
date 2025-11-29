@@ -1,4 +1,4 @@
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/AuthProvider";
 import { ROUTE_PATHS } from "../../router/routePaths";
 import axios from "axios";
@@ -32,19 +32,55 @@ const MainPage = () => {
   const itemsPerPage = 6;
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentCompetitions = competitions.slice(
+  const [statusFilter, setStatusFilter] = useState("ALL");
+  const [dateSortOrder, setDateSortOrder] = useState("NONE");
+
+  // Filter competition status
+  const filteredCompetitions = competitions.filter((comp: any) => {
+    if (statusFilter === "ALL") return true;
+    return comp.status === statusFilter;
+  });
+
+  // Date sorting
+  let sortedCompetitions = [...filteredCompetitions];
+
+  sortedCompetitions.sort((a, b) => {
+    const dateA = a?.date ? new Date(a.date) : null;
+    const dateB = b?.date ? new Date(b.date) : null;
+    const today = new Date();
+    const timeA = dateA ? dateA.getTime() : Infinity;
+    const timeB = dateB ? dateB.getTime() : Infinity;
+    if (dateSortOrder === "NEAREST") {
+      const diffA = Math.abs(timeA - today.getTime());
+      const diffB = Math.abs(timeB - today.getTime());
+      return diffA - diffB;
+    }
+    if (dateSortOrder === "NEWEST") {
+      return timeB - timeA;
+    }
+    if (dateSortOrder === "OLDEST") {
+      return timeA - timeB;
+    }
+    return 0;
+  });
+
+  // Pagination
+  const currentCompetitions = sortedCompetitions.slice(
     indexOfFirstItem,
     indexOfLastItem
   );
-  const totalPages = Math.ceil(competitions.length / itemsPerPage);
 
+  const totalPages = Math.ceil(sortedCompetitions.length / itemsPerPage);
   const { errorToast, successToast } = useToast();
-
   const navigate = useNavigate();
 
   useEffect(() => {
     setCurrentPage(1);
   }, [competitions]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [statusFilter, dateSortOrder]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -186,6 +222,36 @@ const MainPage = () => {
             />
           </div>
         )}
+        <div className="flex justify-end mt-4 gap-4">
+          {/* Status Filter */}
+          <div className="flex flex-col font-semibold">
+            <label className="font-bold mb-1">Status</label>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="border rounded-md px-3 py-2 bg-white shadow"
+            >
+              <option value="ALL">All</option>
+              <option value="ACT">Active</option>
+              <option value="INA">Inactive</option>
+            </select>
+          </div>
+
+          {/* Date Order */}
+          <div className="flex flex-col font-semibold">
+            <label className="font-bold mb-1">Date</label>
+            <select
+              value={dateSortOrder}
+              onChange={(e) => setDateSortOrder(e.target.value)}
+              className="border rounded-md px-3 py-2 bg-white shadow"
+            >
+              <option value="NONE">Default</option>
+              <option value="NEAREST">Nearest</option>
+              <option value="NEWEST">Newest</option>
+              <option value="OLDEST">Oldest</option>
+            </select>
+          </div>
+        </div>
         <div className="mt-10">
           {competitions.length === 0 ? (
             <p>No competitions available.</p>
@@ -202,7 +268,7 @@ const MainPage = () => {
             >
               {currentCompetitions.map((comp: any, idx) => (
                 <li
-                  key={idx}
+                  key={comp.competition_id}
                   className="
                     border border-[#BBB5B5]
                     bg-white 

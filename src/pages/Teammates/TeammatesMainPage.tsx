@@ -13,6 +13,9 @@ import RedButton from "../../components/RedButton";
 const TeammatesMainPage = () => {
   const [teammates, setTeammates] = useState([]);
   const [teamCompetition, setTeamCompetition] = useState<any | undefined>();
+  const [competitionId, setCompetitionId] = useState<number | undefined>(
+    undefined
+  );
   const [isLeader, setIsLeader] = useState(false);
   const [teamName, setTeamName] = useState("");
   const [teamId, setTeamId] = useState<number | undefined>(undefined);
@@ -62,6 +65,7 @@ const TeammatesMainPage = () => {
           const member_id = result_teammates.member_id;
           const memberIds = member_id.split(",").map((id) => id.trim());
           setIsTeamFinalized(response2.data.data.is_finalized);
+          setCompetitionId(result_teammates.competition_id);
 
           const userPromises = memberIds.map(async (id) => {
             const response = await axios.post(CommonConstant.GetUserById, {
@@ -322,6 +326,14 @@ const TeammatesMainPage = () => {
       setIsTextLoading(false);
     }
   };
+  console.log("competitionId:", competitionId);
+  const handleShowFinalizeModal = () => {
+    if(competitionId === undefined || competitionId === null) {
+      warningToast("Join competition first before finalize the team!");
+      return;
+    }
+    setShowFinalizeModal(true);
+  }
 
   return (
     <div className="main-container px-4 md:px-8">
@@ -362,15 +374,19 @@ const TeammatesMainPage = () => {
                   ) : (
                     <BlueButton
                       label="Finalize Team"
-                      onClick={() => setShowFinalizeModal(true)}
+                      onClick={() => handleShowFinalizeModal()}
                       extendedClassName="disabled:opacity-50 disabled:hover:bg-blue-500 disabled:cursor-not-allowed"
                       disabled={!isLeader}
                     />
                   )}
                 </div>
               </div>
+              <hr className="mt-8 text-gray-300" />
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5">
                 <ul className="list-none space-y-4 w-full">
+                  <h3 className="text-xl sm:text-2xl font-semibold mb-3">
+                    Team Members
+                  </h3>
                   {teammates.map((user: any) => (
                     <li key={user.user_id} className="card-container">
                       <div>
@@ -403,6 +419,9 @@ const TeammatesMainPage = () => {
                 </ul>
                 <ul className="w-full space-y-10">
                   {/* Competition Card */}
+                  <h3 className="text-xl sm:text-2xl font-semibold mb-3">
+                    Joined Competition
+                  </h3>
                   <li className="card-container">
                     {teamCompetition ? (
                       <>
