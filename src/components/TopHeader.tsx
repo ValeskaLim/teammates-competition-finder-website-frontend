@@ -41,7 +41,7 @@ const TopHeader = () => {
             </li>
             <li>
               <NavLink
-                to="/teammates"
+                to={ROUTE_PATHS.TEAMMATES_LIST}
                 className="font-semibold px-2 hover:text-gray-600 duration-200"
               >
                 My Team

@@ -16,6 +16,8 @@ const TeammatesMainPage = () => {
   const [competitionId, setCompetitionId] = useState<number | undefined>(
     undefined
   );
+  const [minMember, setMinMember] = useState<number | undefined>(undefined);
+  const [memberLength, setMemberLength] = useState<number | undefined>(undefined);
   const [isLeader, setIsLeader] = useState(false);
   const [teamName, setTeamName] = useState("");
   const [teamId, setTeamId] = useState<number | undefined>(undefined);
@@ -66,6 +68,7 @@ const TeammatesMainPage = () => {
           const memberIds = member_id.split(",").map((id) => id.trim());
           setIsTeamFinalized(response2.data.data.is_finalized);
           setCompetitionId(result_teammates.competition_id);
+          setMemberLength(memberIds.length);
 
           const userPromises = memberIds.map(async (id) => {
             const response = await axios.post(CommonConstant.GetUserById, {
@@ -88,6 +91,7 @@ const TeammatesMainPage = () => {
             if (response.data.success) {
               const team_competition_result = response.data.data;
               setTeamCompetition(team_competition_result);
+              setMinMember(response.data.data.min_member);
             }
           } catch (error: any) {
             console.log(error);
@@ -326,14 +330,18 @@ const TeammatesMainPage = () => {
       setIsTextLoading(false);
     }
   };
-  console.log("competitionId:", competitionId);
+
   const handleShowFinalizeModal = () => {
-    if(competitionId === undefined || competitionId === null) {
+    if (competitionId === undefined || competitionId === null) {
       warningToast("Join competition first before finalize the team!");
       return;
     }
+    else if (memberLength < minMember) {
+      warningToast(`Minimum member requirement not met! At least ${minMember} members needed to finalize the team.`);
+      return;
+    }
     setShowFinalizeModal(true);
-  }
+  };
 
   return (
     <div className="main-container px-4 md:px-8">
