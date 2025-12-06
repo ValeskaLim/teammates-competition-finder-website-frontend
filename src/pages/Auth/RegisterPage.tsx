@@ -20,9 +20,9 @@ function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [gender, setGender] = useState("");
   const [semester, setSemester] = useState("");
-  const [fieldOfPreference, setFieldOfPreference] = useState<string[]>([]);
+  const [fieldOfPreference, setFieldOfPreference] = useState<number[]>([]);
   const [skillOptions, setSkillOptions] = useState<
-    { label: string; value: string }[]
+    { label: string; value: number }[]
   >([]);
 
   const { successToast, warningToast, errorToast } = useToast();
@@ -38,7 +38,7 @@ function RegisterPage() {
 
           const options = skillsets.map((item: any) => ({
             label: item.skill_name,
-            value: item.skill_code,
+            value: item.skill_id,
           }));
 
           setSkillOptions(options);

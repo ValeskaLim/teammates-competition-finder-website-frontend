@@ -7,16 +7,11 @@ import { ROUTE_PATHS } from "../../router/routePaths";
 import GreenButton from "../../components/GreenButton";
 import RedButton from "../../components/RedButton";
 
-type OptionType = {
-  label: string;
-  value: string;
-};
-
 type Competition = {
   title: string;
-  date: string;
+  date: Date;
   status: string;
-  category: string;
+  category: number;
   min_member: number;
   max_member: number;
   description: string;
@@ -28,7 +23,7 @@ const EditCompetitionPage = () => {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [status, setStatus] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState<number | undefined>(undefined);
   const [minMember, setMinMember] = useState<number | undefined>(undefined);
   const [maxMember, setMaxMember] = useState<number | undefined>(undefined);
   const [description, setDescription] = useState("");
@@ -39,7 +34,7 @@ const EditCompetitionPage = () => {
   const [newPoster, setNewPoster] = useState<File | null>(null);
   const [originalUrl, setOriginalUrl] = useState("");
   const [categoryOptions, setCategoryOptions] = useState<
-    { label: string; value: string }[]
+    { label: string; value: number }[]
   >([]);
 
   const { errorToast, successToast } = useToast();
@@ -79,8 +74,8 @@ const EditCompetitionPage = () => {
           const categories = response.data.data || [];
 
           const options = categories.map((item: any) => ({
-            label: item.category_name,
-            value: item.category_code,
+            label: item.competition_category_name,
+            value: item.competition_category_id,
           }));
 
           setCategoryOptions(options);
@@ -100,7 +95,7 @@ const EditCompetitionPage = () => {
     setTitle(competititonData.title);
     setDate(competititonData.date);
     setStatus(competititonData.status);
-    setCategory(competititonData.category);
+    setCategory(competititonData.category_id);
     setMinMember(competititonData.min_member);
     setMaxMember(competititonData.max_member);
     setDescription(competititonData.description);
@@ -214,7 +209,7 @@ const EditCompetitionPage = () => {
               name="category"
               id="category"
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={(e) => setCategory(Number(e.target.value))}
               className="text-md mt-3 p-2 border border-[#BBB5B5] rounded-lg w-full"
               required
             >

@@ -18,7 +18,7 @@ const CompetitionDetail = () => {
   const [isFinalized, setIsFinalized] = useState("");
   const [isMaxMember, setIsMaxMember] = useState("");
   const [categoryOptions, setCategoryOptions] = useState<
-    { label: string; value: string }[]
+    { label: string; value: number }[]
   >([]);
 
   useEffect(() => {
@@ -81,8 +81,8 @@ const CompetitionDetail = () => {
           const categories = response.data.data || [];
 
           const options = categories.map((item: any) => ({
-            label: item.category_name,
-            value: item.category_code,
+            label: item.competition_category_name,
+            value: item.competition_category_id,
           }));
 
           setCategoryOptions(options);
@@ -155,19 +155,6 @@ const CompetitionDetail = () => {
     }
   };
 
-  const getFieldLabels = (valueString) => {
-    if (!valueString) return [];
-    const codes = valueString.split(",");
-    return codes
-      .map((code) => {
-        const match = categoryOptions.find(
-          (item) => item.value === code.trim()
-        );
-        return match ? match.label : code;
-      })
-      .filter(Boolean);
-  };
-
   return (
     <div className="main-container px-4 sm:px-0">
       <div className="main-col-container bg-white p-4 sm:p-7 rounded-2xl shadow-md">
@@ -214,9 +201,7 @@ const CompetitionDetail = () => {
               <div className="flex flex-col gap-2 w-full">
                 <p className="font-semibold text-green-700">
                   Category:{" "}
-                  {getFieldLabels(competition.category).map((label, idx) => (
-                    <span key={idx}>{label}</span>
-                  ))}
+                  {competition.category}
                 </p>
                 <p className="font-semibold text-green-700">
                   Status: {competition.status === "ACT" ? "Active" : "Inactive"}

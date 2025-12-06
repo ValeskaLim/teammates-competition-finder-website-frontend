@@ -7,10 +7,10 @@ import CommonConstant from "../../constant/CommonConstant";
 
 const NonEditProfile = ({ users, setIsEdit }) => {
   const [skillOptions, setSkillOptions] = useState<
-    { label: string; value: string }[]
+    { label: string; value: number }[]
   >([]);
   const { errorToast } = useToast();
-  const selectedValues = users?.field_of_preference?.split(",") || [];
+  const selectedValues = users?.skills?.map((s: any) => s.skill_id) || [];
 
   useEffect(() => {
     const fetchSkillsets = async () => {
@@ -21,7 +21,7 @@ const NonEditProfile = ({ users, setIsEdit }) => {
 
           const options = skillsets.map((item: any) => ({
             label: item.skill_name,
-            value: item.skill_code,
+            value: item.skill_id,
           }));
 
           setSkillOptions(options);
@@ -34,7 +34,8 @@ const NonEditProfile = ({ users, setIsEdit }) => {
       }
     };
     fetchSkillsets();
-  }, []);
+  }, [users]);
+
   return (
     <div className="w-full max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-5 sm:p-8 lg:p-10">
       <h1 className="font-bold text-3xl sm:text-4xl">

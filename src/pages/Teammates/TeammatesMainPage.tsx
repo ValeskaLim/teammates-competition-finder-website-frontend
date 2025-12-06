@@ -17,16 +17,15 @@ const TeammatesMainPage = () => {
     undefined
   );
   const [minMember, setMinMember] = useState<number | undefined>(undefined);
-  const [memberLength, setMemberLength] = useState<number | undefined>(undefined);
+  const [memberLength, setMemberLength] = useState<number | undefined>(
+    undefined
+  );
   const [isLeader, setIsLeader] = useState(false);
   const [teamName, setTeamName] = useState("");
   const [teamId, setTeamId] = useState<number | undefined>(undefined);
   const [error, setError] = useState(null);
   const [isJoinedTeam, setIsJoinedTeam] = useState(false);
   const [isTeamFinalized, setIsTeamFinalized] = useState(false);
-  const [skillOptions, setSkillOptions] = useState<
-    { label: string; value: string }[]
-  >([]);
   const [description, setDescription] = useState("");
   const [notes, setNotes] = useState("");
   const [pendingRequests, setPendingRequests] = useState([]);
@@ -41,17 +40,6 @@ const TeammatesMainPage = () => {
   const { errorToast, successToast, warningToast } = useToast();
   const { users } = useAuth();
   const navigate = useNavigate();
-
-  const getFieldLabels = (valueString) => {
-    if (!valueString) return [];
-    const codes = valueString.split(",");
-    return codes
-      .map((code) => {
-        const match = skillOptions.find((item) => item.value === code.trim());
-        return match ? match.label : code;
-      })
-      .filter(Boolean);
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -116,27 +104,6 @@ const TeammatesMainPage = () => {
       }
     };
 
-    const fetchSkillsets = async () => {
-      try {
-        const response = await axios.post(CommonConstant.GetAllSkillsets);
-        if (response.data.success) {
-          const skillsets = response.data.data || [];
-
-          const options = skillsets.map((item: any) => ({
-            label: item.skill_name,
-            value: item.skill_code,
-          }));
-
-          setSkillOptions(options);
-        }
-      } catch (error: any) {
-        console.log(error);
-        const errorMessage =
-          error?.response?.data?.message || "Failed to fetch skillsets";
-        errorToast(errorMessage);
-      }
-    };
-
     const fetchListPendingRequest = async (id: number) => {
       try {
         const response = await axios.post(CommonConstant.GetAllPendingRequest, {
@@ -171,7 +138,6 @@ const TeammatesMainPage = () => {
 
     if (users) {
       fetchData();
-      fetchSkillsets();
     }
   }, []);
 
@@ -335,9 +301,10 @@ const TeammatesMainPage = () => {
     if (competitionId === undefined || competitionId === null) {
       warningToast("Join competition first before finalize the team!");
       return;
-    }
-    else if (memberLength < minMember) {
-      warningToast(`Minimum member requirement not met! At least ${minMember} members needed to finalize the team.`);
+    } else if (memberLength < minMember) {
+      warningToast(
+        `Minimum member requirement not met! At least ${minMember} members needed to finalize the team.`
+      );
       return;
     }
     setShowFinalizeModal(true);
@@ -395,7 +362,7 @@ const TeammatesMainPage = () => {
                   <h3 className="text-xl sm:text-2xl font-semibold mb-3">
                     Team Members
                   </h3>
-                  {teammates.map((user: any) => (
+                  {teammates.map(({ user, skills }: any) => (
                     <li key={user.user_id} className="card-container">
                       <div>
                         <strong>{user.username}</strong> ({user.fullname})
@@ -415,11 +382,9 @@ const TeammatesMainPage = () => {
                             : user.portfolio.substring(0, 50)}
                         </a>
                         <div className="mt-5 flex flex-wrap gap-2 w-full">
-                          {getFieldLabels(user.field_of_preference).map(
-                            (label, idx) => (
-                              <BlueLabel text={label} key={idx} />
-                            )
-                          )}
+                          {skills.map((s: any) => (
+                            <BlueLabel text={s.skill_name} key={s.skill_id} />
+                          ))}
                         </div>
                       </div>
                     </li>
@@ -591,11 +556,12 @@ const TeammatesMainPage = () => {
                     </a>
 
                     <div className="mt-5 flex flex-wrap gap-2">
-                      {getFieldLabels(request.field_of_preference).map(
-                        (label, idx) => (
-                          <BlueLabel text={label} key={idx} />
-                        )
-                      )}
+                      {request.skills.map((skill: any) => (
+                        <BlueLabel
+                          text={skill.skill_name}
+                          key={skill.skill_id}
+                        />
+                      ))}
                     </div>
 
                     <div className="flex gap-3 mt-5">

@@ -7,11 +7,6 @@ import { useEffect, useState } from "react";
 import GreenButton from "../../components/GreenButton";
 import RedButton from "../../components/RedButton";
 
-type OptionType = {
-  label: string;
-  value: string;
-};
-
 const AddCompetitionPage = () => {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
@@ -23,7 +18,7 @@ const AddCompetitionPage = () => {
   const [poster, setPoster] = useState<File | null>(null);
   const [originalUrl, setOriginalUrl] = useState("");
   const [categoryOptions, setCategoryOptions] = useState<
-    { label: string; value: string }[]
+    { label: string; value: number }[]
   >([]);
 
   const { errorToast, successToast } = useToast();
@@ -38,8 +33,8 @@ const AddCompetitionPage = () => {
           const categories = response.data.data || [];
 
           const options = categories.map((item: any) => ({
-            label: item.category_name,
-            value: item.category_code,
+            label: item.competition_category_name,
+            value: item.competition_category_id,
           }));
 
           setCategoryOptions(options);

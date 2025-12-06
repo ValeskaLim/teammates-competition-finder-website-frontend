@@ -18,16 +18,17 @@ const EditProfile = ({ users, setIsEdit }) => {
   const [gender, setGender] = useState("");
   const [semester, setSemester] = useState("");
   const [major, setMajor] = useState("");
-  const [fieldOfPreference, setFieldOfPreference] = useState<string[]>([]);
+  const [fieldOfPreference, setFieldOfPreference] = useState<number[]>([]);
   const [portfolioLink, setPortfolioLink] = useState("");
   const [skillOptions, setSkillOptions] = useState<
-    { label: string; value: string }[]
+    { label: string; value: number }[]
   >([]);
   const [isChangePwMode, setIsChangePwMode] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const selectedValues = users?.skills?.map((s: any) => s.skill_id) || [];
 
   const { successToast, warningToast, errorToast } = useToast();
 
@@ -97,7 +98,7 @@ const EditProfile = ({ users, setIsEdit }) => {
 
           const options = skillsets.map((item: any) => ({
             label: item.skill_name,
-            value: item.skill_code,
+            value: item.skill_id,
           }));
 
           setSkillOptions(options);
@@ -117,7 +118,7 @@ const EditProfile = ({ users, setIsEdit }) => {
       setSemester(users.semester || "");
       setMajor(users.major || "");
       setFieldOfPreference(
-        users.field_of_preference ? users.field_of_preference.split(",") : []
+        users.skills ? users.skills.map((s: any) => s.skill_id) : []
       );
       setPortfolioLink(users.portfolio || null);
     }

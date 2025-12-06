@@ -51,9 +51,12 @@ const MainPage = () => {
     const timeA = dateA ? dateA.getTime() : Infinity;
     const timeB = dateB ? dateB.getTime() : Infinity;
     if (dateSortOrder === "NEAREST") {
-      const diffA = Math.abs(timeA - today.getTime());
-      const diffB = Math.abs(timeB - today.getTime());
-      return diffA - diffB;
+      const aFuture = timeA >= today.getTime();
+      const bFuture = timeB >= today.getTime();
+      if (aFuture && !bFuture) return -1;
+      if (!aFuture && bFuture) return 1;
+      if (!aFuture && !bFuture) return timeA - timeB;
+      return timeA - timeB;
     }
     if (dateSortOrder === "NEWEST") {
       return timeB - timeA;

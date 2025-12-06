@@ -11,24 +11,25 @@ import GreenButton from "../../components/GreenButton";
 import RedButton from "../../components/RedButton";
 
 const FindPage = () => {
-  const [inviteesUser, setinviteesUser] = useState([]);
-  const [invitesUser, setinvitesUser] = useState([]);
+  const [inviteesUser, setInviteesUser] = useState([]);
+  const [invitesUser, setInvitesUser] = useState([]);
   const [memberLength, setMemberLength] = useState();
   const [isRunFind, setIsRunFind] = useState(false);
   const [isJoinCompetition, setIsJoinCompetition] = useState(false);
   const [maxMember, setMaxMember] = useState(null);
   const [invitationNumber, setInvitationNumber] = useState(null);
   const [skillOptions, setSkillOptions] = useState<
-    { label: string; value: string }[]
+    { label: string; value: number }[]
   >([]);
   const [showFilter, setShowFilter] = useState(false);
-  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const [selectedSkills, setSelectedSkills] = useState<number[]>([]);
   const [allUsers, setAllUsers] = useState<any[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<any[]>([]);
   const [username, setUsername] = useState("");
   const [isLeader, setIsLeader] = useState(false);
   const [isFinalized, setIsFinalized] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -46,6 +47,7 @@ const FindPage = () => {
   const { users } = useAuth();
 
   const inviteeIds = inviteesUser.map((invitee) => invitee.invitee_id);
+  console.log(invitesUser);
 
   const usersToShow = selectedSkills.length > 0 ? filteredUsers : allUsers;
   const displayedUsers = (usersToShow || []).filter((user: any) =>
@@ -64,8 +66,8 @@ const FindPage = () => {
       const response = await axios.post(CommonConstant.GetInviteesUser);
       try {
         if (response.data.success) {
-          const inviteesUser = response.data.data || [];
-          setinviteesUser(inviteesUser);
+          const resInviteesUser = response.data.data || [];
+          setInviteesUser(resInviteesUser);
         }
       } catch (error: any) {
         console.log(error);
@@ -81,7 +83,7 @@ const FindPage = () => {
 
           const options = skillsets.map((item: any) => ({
             label: item.skill_name,
-            value: item.skill_code,
+            value: item.skill_id,
           }));
 
           setSkillOptions(options);
@@ -99,7 +101,7 @@ const FindPage = () => {
       try {
         if (response.data.success) {
           const invitesUser = response.data.data || [];
-          setinvitesUser(invitesUser);
+          setInvitesUser(invitesUser);
         }
       } catch (error: any) {
         console.log(error);
@@ -171,6 +173,7 @@ const FindPage = () => {
     fetchTeamData();
     checkInvitationNumber();
     fetchSkillsets();
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
@@ -314,15 +317,15 @@ const FindPage = () => {
     }
   };
 
-  const handleFilterClick = (skillCode: string) => {
+  const handleFilterClick = (skillId: number) => {
     setSelectedSkills((prev) =>
-      prev.includes(skillCode)
-        ? prev.filter((code) => code !== skillCode)
-        : [...prev, skillCode]
+      prev.includes(skillId)
+        ? prev.filter((id) => id !== skillId)
+        : [...prev, skillId]
     );
   };
 
-  const filterUsersBySkills = async (skills: string[]) => {
+  const filterUsersBySkills = async (skills: number[]) => {
     try {
       const response = await axios.post(CommonConstant.FilterUsers, {
         skills: skills,
@@ -477,16 +480,14 @@ const FindPage = () => {
                         </div>
                       </div>
                       <div className="mt-5 grid grid-cols-3 gap-2">
-                        {getFieldLabels(user.field_of_preference).map(
-                          (label, idx) => (
-                            <span
-                              key={idx}
-                              className="text-center bg-blue-100 text-blue-700 px-2 py-2 rounded text-xs font-bold"
-                            >
-                              {label}
-                            </span>
-                          )
-                        )}
+                        {user.skills.map((skill: any) => (
+                          <span
+                            key={skill.skill_id}
+                            className="text-center bg-blue-100 text-blue-700 px-2 py-2 rounded text-xs font-bold"
+                          >
+                            {skill.skill_name}
+                          </span>
+                        ))}
                       </div>
                     </div>
                     <div className="lex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 mt-7">
@@ -621,18 +622,16 @@ const FindPage = () => {
                     </div>
                   </div>
                   <div className="grid grid-cols-3 gap-1 mt-2">
-                    {getFieldLabels(user.invitee.field_of_preference).map(
-                      (label, idx) => (
-                        <span
-                          key={idx}
-                          className="flex items-center bg-blue-100 text-blue-700 px-2 py-2 rounded text-xs font-bold"
-                        >
-                          {label}
-                        </span>
-                      )
-                    )}
+                    {user.invitee.skills.map((skill: any) => (
+                      <span
+                        key={skill.skill_id}
+                        className="flex items-center bg-blue-100 text-blue-700 px-2 py-2 rounded text-xs font-bold"
+                      >
+                        {skill.skill_name}
+                      </span>
+                    ))}
                   </div>
-                  <div>
+                  <div className="flex flex-col mt-auto self-start">
                     <RedButton
                       label="Remove"
                       onClick={async () => {
@@ -674,12 +673,12 @@ const FindPage = () => {
                   <div className="flex justify-between">
                     <div className="w-full mr-5">
                       <h3 className="font-semibold text-xl">
-                        {user.invites.username}
+                        {user.inviter.username}
                       </h3>
                       <p className="flex justify-between">
                         <span>Gender:</span>
                         <span className="w-3/5">
-                          {user.invites.gender == "L"
+                          {user.inviter.gender == "L"
                             ? "Laki-laki"
                             : "Perempuan"}
                         </span>
@@ -687,31 +686,27 @@ const FindPage = () => {
                       <p className="flex justify-between break-words">
                         <span>Email:</span>
                         <span className="w-3/5 break-words">
-                          {user.invites.email}
+                          {user.inviter.email}
                         </span>
                       </p>
                       <p className="flex justify-between">
                         <span>Semester:</span>
-                        <span className="w-3/5">{user.invites.semester}</span>
+                        <span className="w-3/5">{user.inviter.semester}</span>
                       </p>
-                      <p className="mt-2">Field of interest:</p>
                     </div>
                     <div className="opacity-0 2xl:opacity-100 flex h-fit p-3 font-semibold items-center text-red-600 border-2 border-red-600 px-2 py-1 rounded-md">
                       Pending
                     </div>
                   </div>
-                  <div className="grid grid-cols-3 mt-2 gap-1">
-                    {skillOptions.length > 0 &&
-                      getFieldLabels(user.invites.field_of_preference).map(
-                        (label, idx) => (
-                          <span
-                            key={idx}
-                            className="flex items-center bg-blue-100 text-blue-700 px-2 py-2 rounded text-xs font-bold"
-                          >
-                            {label}
-                          </span>
-                        )
-                      )}
+                  <div className="grid grid-cols-3 mt-5 gap-1">
+                    {user.inviter.skills.map((skill: any) => (
+                      <span
+                        key={skill.skill_id}
+                        className="flex items-center bg-blue-100 text-blue-700 px-2 py-2 rounded text-xs font-bold"
+                      >
+                        {skill.skill_name}
+                      </span>
+                    ))}
                   </div>
                   <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 mt-7">
                     <GreenButton
