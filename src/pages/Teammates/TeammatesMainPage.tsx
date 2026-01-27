@@ -658,7 +658,7 @@ const TeammatesMainPage = () => {
             <p className="text-gray-600 mb-2 font-bold">Members:</p>
             <ul className="list-disc ml-5 mb-4">
               {teammates.map((m: any) => (
-                <li key={m.user_id}>{m.fullname}</li>
+                <li key={m.user.user_id}>{m.user.fullname}</li>
               ))}
             </ul>
             <label className="block font-bold mt-7">

@@ -712,7 +712,7 @@ const FindPage = () => {
                     <GreenButton
                       label="Accept"
                       onClick={() =>
-                        handleAcceptInvitation(user.invites.user_id)
+                        handleAcceptInvitation(user.inviter.user_id)
                       }
                       disabled={isSubmitting}
                       extendedClassName="w-full xl:w-fit disabled:opacity-50 disabled:cursor-not-allowed"
@@ -730,7 +730,7 @@ const FindPage = () => {
                           confirmButtonText: "Reject",
                         });
                         if (result.isConfirmed) {
-                          await handleRejectInvitation(user.invites.user_id);
+                          await handleRejectInvitation(user.inviter.user_id);
                           await Swal.fire({
                             title: "Invitation Rejected!",
                             text: "Invitation has been rejected.",
